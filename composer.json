@@ -1,0 +1,38 @@
+{
+    "name": "sedona/sbo",
+    "type": "library",
+    "description": "Sedona Back-Office bundles",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sedona",
+            "email": "contact@sedona.fr"
+        }
+    ],    
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    },
+    "require": {
+      "php": ">=5.3.9",
+
+      "doctrine/orm"                        : "^2.4.8",
+      "doctrine/doctrine-bundle"            : "~1.4",
+      "twig/extensions"                     : "^1.3",
+      "symfony/symfony"                     : "~2.7",
+      "symfony/assetic-bundle"              : "~2.3",
+
+      "symfony/monolog-bundle"              : "~2.4",
+      "friendsofsymfony/jsrouting-bundle"   : "^1.5",
+      "jms/di-extra-bundle"                 : "~1.5",
+      "Trsteel/ckeditor-bundle"             : "~1.8",
+      "helios-ag/fm-elfinder-bundle"        : "~5.0",
+      "datatables/datatables"               : "^1.10",
+      "moment/moment"                       : "^2.10",
+      "knplabs/knp-menu-bundle"             : "~2.0",
+      "knplabs/knp-paginator-bundle"        : "~2.4",
+      "avanzu/admin-theme-bundle"           : "~1.3",
+      "sg/datatablesbundle"                 : "^0.10.0"
+    }
+}

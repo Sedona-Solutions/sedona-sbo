@@ -1,0 +1,25 @@
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+{%- set objectname = '$'~(targetClassName|lower != entity|lower ? targetClassName : field)|lower %}
+
+    /**
+{% block phpdoc_method_header %}
+     * Remove relation {{ entity }} to {{ field }}.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{%- if 'annotation' == format %}
+     * @Route("/{id}/remove{{ field|capitalize ~ '/{' ~ targetClassName|lower }}_id}", name="admin_{{ entity|lower }}_{{ field|lower }}_remove", options={"expose"=true})
+     * @ParamConverter("{{ targetClassName|lower }}", class="{{ metadata['targetEntity'] }}", options={"id" = "{{ targetClassName|lower }}_id"})
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function remove{{ field|capitalize }}Action({{ entity }} ${{ entity|lower }}, {{ targetClassName }} {{ objectname }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageJsonAction(${{ entity|lower }}, {{ objectname }}, '{{ field }}', '{{ 'remove'~field|capitalize }}', true);
+{% endblock method_return %}
+    }

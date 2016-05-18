@@ -1,0 +1,28 @@
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+
+    /**
+{% block phpdoc_method_header %}
+     * JSON call for datatable to list all {{ targetClassName }} entities for property {{ field }} of entity {{ entity }}.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}/datatable{{ field|capitalize }}", name="admin_{{ entity|lower }}_{{ field|lower }}_datatable", options={"expose"=true})
+     * @Method("GET")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function datatable{{ field|capitalize }}Action({{ entity }} ${{ entity|lower }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+{% if metadata['type'] == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') %}
+        return $this->manageFieldDatatableJson(${{ entity|lower }}, '{{ field }}', '{{ metadata['inversedBy']|default(metadata['mappedBy']) }}', 'many');
+{% else %}
+        return $this->manageFieldDatatableJson(${{ entity|lower }}, '{{ field }}', '{{ metadata['inversedBy']|default(metadata['mappedBy']) }}', 'one');
+{% endif %}
+{% endblock method_return %}
+    }

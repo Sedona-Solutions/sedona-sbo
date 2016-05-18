@@ -1,0 +1,104 @@
+<?php
+
+namespace {{ namespace }}\Datatables{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
+
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
+use Sg\DatatablesBundle\Datatable\View\AbstractDatatableView;
+use Sg\DatatablesBundle\Datatable\View\Style;
+
+/**
+ * Class {{ entity }}Datatable
+ * @Service("admin_{{ entity|lower }}_datatable")
+ * @Tag("sg.datatable.view")
+ */
+class {{ entity }}Datatable extends AbstractCrudDatatableView
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildDatatable(array $options= [])
+    {
+        $this->setParameters();
+        $this->setColumns();
+
+        $this->ajax->set(['url' => $this->router->generate('admin_{{ entity|lower }}_datatable')]);
+
+        //$this->options->set(['individual_filtering' => true]); // Uncomment it to have a search for each field
+
+        $actions = [];
+        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_show') != null) {
+            $actions[] = [
+                'route' => 'admin_{{ entity|lower }}_show',
+                'route_parameters' => array('id' => 'id'),
+                'label' => $this->translator->trans('crud.title.show', [], 'admin'),
+                'icon' => 'glyphicon glyphicon-eye-open',
+                'attributes' => array(
+                    'rel' => 'tooltip',
+                    'title' => 'Show',
+                    'class' => 'btn btn-default btn-xs',
+                    'role' => 'button'
+                )
+            ];
+        }
+        if(count($actions)>0) {
+            $this->getColumnBuilder()
+                ->add(null, 'action', array(
+                    'title' => 'Actions',
+                    'actions' => $actions
+                ));
+        }
+    }
+
+    protected function setParameters() {
+        $this->features->set([
+            'server_side' => true,
+            'processing' => true,
+        ]);
+        $this->options->set([
+            'class' => Style::BOOTSTRAP_3_STYLE,
+            'use_integration_options' => true,
+        ]);
+    }
+
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function setColumns() {
+
+        $this->getColumnBuilder()
+{% for field, metadata in fields if metadata.type not in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] %}
+{% if metadata.type == 'date' %}
+            ->add('{{ field }}', 'datetime', array('title' => $this->translator->trans('admin.{{ entity|lower }}.{{ field }}', [], 'admin'), 'date_format' => 'L'))
+{% elseif metadata.type == 'datetime' %}
+            ->add('{{ field }}', 'datetime', array('title' => $this->translator->trans('admin.{{ entity|lower }}.{{ field }}', [], 'admin'), 'date_format' => 'L LTS'))
+{% elseif metadata.type == 'time' %}
+            ->add('{{ field }}', 'datetime', array('title' => $this->translator->trans('admin.{{ entity|lower }}.{{ field }}', [], 'admin'), 'date_format' => 'LTS'))
+{% elseif metadata.type in [2] %}{# 2 == MANY_TO_ONE #}
+            // ->add('{{ field }}.name', 'column', array('title' => $this->translator->trans('admin.{{ entity|lower }}.{{ field }}', [], 'admin'))) Many to one, uncomment and select column to add
+{% elseif metadata.type == 'text' %}
+            // ->add('{{ field }}', 'column', array('title' => $this->translator->trans('admin.{{ entity|lower }}.{{ field }}', [], 'admin'))) Text field, uncomment to add
+{% else %}
+            ->add('{{ field }}', 'column', array('title' => $this->translator->trans('admin.{{ entity|lower }}.{{ field }}', [], 'admin')))
+{% endif %}
+{% endfor %}
+        ;
+    }
+
+    /**
+    * {@inheritdoc}
+    */
+    public function getEntity()
+    {
+        return '{{ bundle }}:{{ entity }}';
+    }
+
+    /**
+    * {@inheritdoc}
+    */
+    public function getName()
+    {
+        return '{{ entity|lower }}_datatable';
+    }
+}

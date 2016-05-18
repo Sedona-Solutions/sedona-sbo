@@ -1,0 +1,22 @@
+
+    /**
+{% block phpdoc_method_header %}
+    * Create a new {{ entity }}.
+{% endblock phpdoc_method_header %}
+    *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+    * @Route("/new", name="admin_{{ entity|lower }}_new", options={"expose"=true})
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+    */
+{% block method_definition %}
+    public function newAction(Request $request)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageNew(new {{ entity }}(), $request, new {{ entity }}Type());
+{% endblock method_return %}
+    }

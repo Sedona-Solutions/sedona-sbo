@@ -1,0 +1,14 @@
+{{ "{{ form_errors(form) }}" }}
+
+{% for field, metadata in fields %}
+{% if field == 'id' %}
+{% elseif metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE')] %}{# 2 == MANY_TO_ONE #}
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+{{ renderFile('crud/views/object/renderResultSelect2.html.twig.twig', dir~'/../'~targetClassName~'/renderResultSelect2.html.twig',{'tabname':field,'field': field ,'metadata': metadata }) }}
+{{ "{{ form_row(form." ~ field ~ ", {'label': 'admin." ~ entity|lower() ~ "." ~ field ~ "'|trans([], 'admin')} ) }}" }}
+{% elseif metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] %}{# 2 == MANY_TO_ONE #}
+{{ "{#" ~ "{{ form_row(form." ~ field ~ ", {'label': 'admin." ~ entity|lower() ~ "." ~ field ~ "'|trans([], 'admin')} ) }}" ~ "#}" }}
+{% else %}
+{{ "{{ form_row(form." ~ field ~ ", {'label': 'admin." ~ entity|lower() ~ "." ~ field ~ "'|trans([], 'admin')} ) }}" }}
+{% endif %}
+{% endfor %}

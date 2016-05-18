@@ -1,0 +1,122 @@
+{% block extends %}
+{{ "{% extends '::layout_admin.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+
+{{ "{% block page_title %}" }}
+{{ "    {{ \"crud.title.show\"|trans([], 'admin') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block page_subtitle %}" }}
+{{ '    {{ "admin.' ~ entity|lower ~ '.entity_name"|trans([], "admin") }}' }}
+{{ "{% endblock %}" }}
+
+{{ "{% block content %}" }}
+
+    {%- set tabList = ["entity_name"] %}
+    {%- for field, metadata in fields %}
+        {%- if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] %}
+            {% set tabList = tabList|merge([field ]) %}
+        {%- endif %}
+    {%- endfor %}
+    {%- set data -%}
+
+                    <table class="record_properties">
+                        <tbody>
+                        {%- for field, metadata in fields if metadata.type not in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')]  %}
+
+                            <tr>
+                                <th>{{ '{{ "admin.' ~ entity|lower() ~ '.' ~ field ~ '"|trans([], "admin") }}' }}</th>
+
+                                {%- if metadata.type in ['date', 'datetime', 'time'] %}
+
+                                    {%- if metadata.type == 'date' %}
+                                        {%- set date_format='long' %}
+                                        {%- set time_format='none' %}
+                                    {%- elseif metadata.type == 'datetime' %}
+                                        {%- set date_format='long' %}
+                                        {%- set time_format='medium' %}
+                                    {%- else %}
+                                        {%- set date_format='none' %}
+                                        {%- set time_format='medium' %}
+                                    {%- endif %}
+
+                                <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ '|localizeddate("' ~ date_format ~ '","' ~ time_format ~ '") }}' }}</td>
+
+                                {%- elseif metadata.type == 'array' %}
+                                    <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ '|join(",") }}' }}</td>
+
+                                {%- elseif metadata.type == 'text' %}
+                                    <td>{{ '{{ entity.' ~ field ~ '|raw }}' }}</td>
+
+                                {%- else %}
+
+                                <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ ' }}' }}</td>
+
+                                {%- endif %}
+
+                            </tr>
+
+                        {%- endfor %}
+
+                        </tbody>
+                    </table>
+    {%- endset -%}
+    {%- set button -%}
+                    {% if ('edit' in actions) -%}<a href="{{ "{{ path('admin_" ~ entity|lower ~ "_edit', { id:entity.id}) }}" }}" class="btn btn-default">{{ "{{ 'crud.form.edit'|trans([], 'admin')|addGlyphicon(\"edit\") }}" }}</a>{%- endif %}
+                    <a href="{{ "{{ path('admin_" ~ entity|lower ~ "_list') }}" }}" class="btn btn-default">{{ "{{ 'crud.form.list'|trans([], 'admin')|addGlyphicon(\"list\") }}" }}</a>
+    {%- endset -%}
+
+    {#%- if tabList|length>1 %#}
+
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs pull-right">
+            <li class="pull-left header"><i class="fa fa-th"></i> {{ '{{ entity }}' }}</li>
+            {% for tabname in tabList|reverse -%}
+                {% if loop.last -%}
+                    <li class="active"><a data-toggle="tab" href="#tab_{{ tabname }}_{{ loop.index }}">{{ '{{ "crud.title.properties"|trans([], "admin") }}' }}</a></li>
+                {% else -%}
+                    <li><a data-toggle="tabajax" data-target="#tab_{{ tabname }}_{{ loop.index }}" href="{{ "{{ path('admin_" ~ entity|lower ~ "_" ~ tabname|lower ~ "_list', { id:entity.id}) }}" }}">{{ '{{ "admin.' ~ entity|lower() ~ '.' ~ tabname ~ '"|trans([], "admin") }}' }}</a></li>
+                {% endif -%}
+            {% endfor -%}
+        </ul>
+        <div class="tab-content">
+            {%- for tabname in tabList|reverse%}
+
+            <div id="tab_{{ tabname }}_{{ loop.index }}" class="tab-pane{% if loop.last %} active{% endif %}">
+
+                {%- if loop.last %}
+                <form role="form">
+                    {{ data|raw }}
+                    <div class="text-center">
+                        {{ button|raw }}
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+                {%- else %}
+                    {%- set targetClassName = fields[tabname]['targetEntity']|split('\\')|last %}
+                    {{ renderFile('crud/views/object/renderResultSelect2.html.twig.twig', dir~'/../'~targetClassName~'/renderResultSelect2.html.twig',{'tabname':tabname,'field': tabname ,'metadata': fields[tabname] }) }}
+                    {{ renderFile('crud/views/object/index.html.twig.twig', dir~'/'~tabname|lower~'/index.html.twig',{'tabname':tabname,'field': tabname ,'metadata': fields[tabname] }) }}
+                <div class="overlay"></div>
+                <div class="loading-img"></div>
+                {%- endif %}
+
+            </div>
+            {%- endfor %}
+
+        </div>
+    </div>
+    {# %- else %}
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="box-title">{{ "{{ entity }}" }}</h3>
+        </div>
+        <div class="box-body">{{ data|raw }}</div>
+        <div class="box-footer">{{ button|raw }}</div>
+        </form>
+    </div>
+    {%- endif %#}
+
+{{ "{% endblock %}" }}
+{% endblock body %}

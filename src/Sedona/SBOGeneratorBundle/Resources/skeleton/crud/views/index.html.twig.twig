@@ -1,0 +1,32 @@
+{% block extends %}
+{{ "{% extends '::layout_admin.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+
+{{ "{% block page_title %}" }}
+{{ "    {{ \"crud.title.index\"|trans([], 'admin') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block page_subtitle %}" }}
+{{ '    {{ "admin.' ~ entity|lower ~ '.entity_name"|trans([], "admin") }}' }}
+{{ "{% endblock %}" }}
+
+{{ "{% block content %}" }}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-body table-responsive">
+                    {{ "{{ datatable_render(datatable) }}" }}
+                </div>
+                <div class="box-footer">
+                    {%- if ('new' in actions) -%}
+                    <a href="{{ "{{ path('admin_" ~ entity|lower ~ "_new') }}" }}" class="btn btn-default pull-right">{{ "{{ 'crud.form.new'|trans([], 'admin')|addGlyphicon(\"plus-sign\") }}" }}</a>
+                    {%- endif -%}
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ "{% endblock %}" }}
+{% endblock body %}

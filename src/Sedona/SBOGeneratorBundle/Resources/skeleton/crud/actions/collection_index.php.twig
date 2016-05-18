@@ -1,0 +1,24 @@
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+
+    /**
+{% block phpdoc_method_header %}
+     * Lists all {{ targetClassName }} entities for property {{ field }} of entity {{ entity }}.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/{id}/list{{ field|capitalize }}", name="admin_{{ entity|lower }}_{{ field|lower }}_list", options={"expose"=true})
+     * @Method("GET")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function index{{ field|capitalize }}Action({{ entity }} ${{ entity|lower }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageFieldIndex(${{ entity|lower }}, '{{ field }}');
+{% endblock method_return %}
+    }

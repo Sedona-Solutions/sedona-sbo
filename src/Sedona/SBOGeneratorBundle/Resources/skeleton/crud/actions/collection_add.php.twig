@@ -1,0 +1,25 @@
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+{%- set objectname = '$'~(targetClassName|lower != entity|lower ? targetClassName : field)|lower %}
+
+    /**
+{% block phpdoc_method_header %}
+     * Add relation {{ entity }} to {{ field }}.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{%- if 'annotation' == format %}
+     * @Route("/{id}/add{{ field|capitalize ~ '/{' ~ targetClassName|lower }}_id}", name="admin_{{ entity|lower }}_{{ field|lower }}_add", options={"expose"=true})
+     * @ParamConverter("{{ targetClassName|lower }}", class="{{ metadata['targetEntity'] }}", options={"id" = "{{ targetClassName|lower }}_id"})
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function add{{ field|capitalize }}Action({{ entity }} ${{ entity|lower }}, {{ targetClassName }} {{ objectname }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageJsonAction(${{ entity|lower }}, {{ objectname }}, '{{ field }}', '{{ 'add'~field|capitalize }}', false);
+{% endblock method_return %}
+    }

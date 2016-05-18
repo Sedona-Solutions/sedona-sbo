@@ -1,0 +1,23 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * JSON call for datatable to list all {{ entity }} entities.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/datatable", name="admin_{{ entity|lower }}_datatable")
+     * @Method("GET")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function datatableAction()
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageDatatableJson();
+{% endblock method_return %}
+    }

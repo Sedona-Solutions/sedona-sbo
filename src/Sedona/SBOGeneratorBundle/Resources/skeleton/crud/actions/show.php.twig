@@ -1,0 +1,23 @@
+
+    /**
+{% block phpdoc_method_header %}
+    * Show a {{ entity }}.
+{% endblock phpdoc_method_header %}
+    *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+    * @Route("/{id}", name="admin_{{ entity|lower }}_show", options={"expose"=true})
+    * @Method("GET")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+    */
+{% block method_definition %}
+    public function showAction({{ entity }} $entity)
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageShow($entity);
+{% endblock method_return %}
+    }

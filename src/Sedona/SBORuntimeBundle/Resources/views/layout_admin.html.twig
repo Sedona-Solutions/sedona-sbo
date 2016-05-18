@@ -1,0 +1,52 @@
+{% extends 'AvanzuAdminThemeBundle:layout:base-layout.html.twig' %}
+
+{%  block javascripts_head %}
+    <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/scripts/modernizr.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/scripts/admin-lte-all.js') }}"></script>
+
+    <!--[if lt IE 9]>
+
+    <![endif]-->
+
+{% endblock %}
+
+{% block title %}
+    Sedona SBO
+{% endblock title %}
+
+{% block page_content %}
+    {% for label, flashes in app.session.flashbag.all %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ label }}">
+                <i class="fa {% if label == 'success' %}fa-check{% elseif label == 'notice' %}fa-info{% else %}fa-warning{% endif %}"></i>
+                <button class="close" aria-hidden="true" data-dismiss="alert" type="button">×</button>
+                {{ flash }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% block content %}{% endblock content %}
+{% endblock page_content %}
+
+{% block javascripts %}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+    <script language="JavaScript">
+    var myApplication = {
+        locale: '{{ app.request.locale }}'
+    }
+    </script>
+    {% if app.request.locale != 'en' %}
+    <script src="{{ asset('bundles/sedonasboadmintheme/vendor/select2/select2_locale_'~app.request.locale~'.js') }}"></script>
+    <script src="{{ asset('bundles/sedonasboadmintheme/vendor/moment/locale/'~app.request.locale~'.js') }}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block avanzu_admin_footer %}
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+            <b>Version</b> 2.0
+        </div>
+        Footer
+    </footer>
+{% endblock %}

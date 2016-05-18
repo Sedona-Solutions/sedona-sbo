@@ -1,0 +1,100 @@
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+<?php
+
+namespace {{ namespace }}\Datatables{{ entity_namespace ? '\\' ~ entity_namespace : '' }};
+
+use {{ namespace }}\Entity\{{ entity }};
+use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
+use Sg\DatatablesBundle\Datatable\View\AbstractDatatableView;
+use Sg\DatatablesBundle\Datatable\View\Style;
+
+/**
+ * Class {{ entity }}Datatable
+ * @Service("admin_{{ entity|lower }}_{{ tabname }}_datatable")
+ * @Tag("sg.datatable.view")
+ */
+class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}Datatable
+{
+    /**
+     * {@inheritdoc}
+     */
+    public function buildDatatable(array $options = [])
+    {
+        ${{ entity|lower }} = $options['entity'];
+
+        if (!${{ entity|lower }} instanceof {{ entity }}) {
+            throw new \InvalidArgumentException(sprintf('Instance of {{ entity }} expected, got %s', get_class(${{ entity|lower }})));
+        }
+
+        $this->setParameters();
+        $this->setColumns();
+
+        $this->ajax->set(['url' => $this->router->generate('admin_{{ entity|lower }}_{{ field|lower }}_datatable',['id'=> ${{ entity|lower }}->getId()])]);
+
+        //$this->options->set(['individual_filtering' => true]); // Uncomment it to have a search for each field
+
+        $actions = [];
+        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_show') != null) {
+            $actions[] = [
+                'route' => 'admin_{{ targetClassName|lower }}_show',
+                'route_parameters' => array('id' => 'id'),
+                'label' => $this->translator->trans('crud.title.show', [], 'admin'),
+                'icon' => 'glyphicon glyphicon-eye-open',
+                'attributes' => array(
+                    'rel' => 'tooltip',
+                    'title' => 'Show',
+                    'class' => 'btn btn-default btn-xs',
+                    'role' => 'button'
+                )
+            ];
+        }
+        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_{{ field|lower }}_remove') != null) {
+            $actions[] = [
+                'route' => 'admin_{{ entity|lower }}_{{ field|lower }}_remove',
+                'route_parameters' => array('{{ targetClassName|lower }}_id' => 'id', 'id' => '{{ metadata['mappedBy'] is not empty ? metadata['mappedBy'] : metadata['inversedBy'] }}{{  metadata['type'] == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') ? '[0]' : '' }}.id' ),
+                'label' => $this->translator->trans('crud.form.delete', [], 'admin'),
+                'icon' => 'glyphicon glyphicon-remove-circle',
+                'attributes' => array(
+                    'rel' => 'tooltip',
+                    'title' => $this->translator->trans('crud.form.delete', [], 'admin'),
+                    'class' => 'btn btn-default btn-xs',
+                    'role' => 'button',
+                    'data-toggle' => 'delete',
+                    'data-confirm' => $this->translator->trans('crud.form.confirm', [], 'admin'),
+                ),
+{#                {% for joinColumn in metadata['joinColumns'] if joinColumn['name'] == (targetClassName|lower~'_id') and joinColumn['nullable'] == false %}
+                'renderif' => array('removeAction')
+                {% endfor %}#}
+            ];
+        }
+        if(count($actions)>0) {
+            // mappedBy > {{  metadata['mappedBy'] }} | inversedBy > {{  metadata['inversedBy'] }}
+            $this->getColumnBuilder()
+                ->add('{{ metadata['mappedBy'] ? metadata['mappedBy'] : metadata['inversedBy'] }}.id','column',['visible' => false])
+                ->add(null, 'action', array(
+                    'title' => 'Actions',
+                    'actions' => $actions
+                ));
+        }
+
+    }
+{#    {% for joinColumn in metadata['joinColumns'] if joinColumn['name'] == (targetClassName|lower~'id') and joinColumn['nullable'] == false %}
+    protected function initLineFormatter() {
+        $this->addLineFormatter(function($line, $outputHeader = null){
+            $line['removeAction'] = array_key_exists('recordsTotal',$outputHeader) ? $outputHeader['recordsTotal'] > 1 : null;
+            return $line;
+        });
+
+        parent::initLineFormatter();
+    }
+    {% endfor %}#}
+
+    /**
+    * {@inheritdoc}
+    */
+    public function getName()
+    {
+        return '{{ entity|lower }}_{{ field|lower }}_datatable';
+    }
+}

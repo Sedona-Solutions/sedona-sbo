@@ -1,0 +1,35 @@
+{%- set targetClassName = metadata['targetEntity']|split('\\')|last %}
+
+    /**
+{% block phpdoc_method_header %}
+     * Search {{ field }} for entity {{ entity }}.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{%- if 'annotation' == format %}
+     * @Route("/{id}/search{{ field|capitalize }}", name="admin_{{ entity|lower }}_{{ field|lower }}_search", options={"expose"=true})
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function search{{ field|capitalize }}Action(Request $request, {{ entity }} ${{ entity|lower }})
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+{% set property = null  %}
+{% if method_exists(metadata['targetEntity'] ,'get'~'name'|capitalize ) %}
+    {%- set property = 'name'  %}
+{% elseif method_exists(metadata['targetEntity'] ,'get'~'title'|capitalize ) %}
+    {%- set property = 'title'  %}
+{% endif %}
+{% set getter = null %}
+{% if method_exists(metadata['sourceEntity'] ,'get'~field|capitalize~'s' ) %}
+    {%- set getter = 'get'~field|capitalize~'s'  %}
+{% elseif method_exists(metadata['sourceEntity'] ,'get'~field|capitalize ) %}
+    {%- set getter = 'get'~field|capitalize  %}
+{% endif %}
+        return $this->manageSearchFieldMany($request, ${{ entity|lower }}, '{{ metadata['targetEntity'] }}', '{{ field }}', '{{ property }}');
+{% endblock method_return %}
+    }

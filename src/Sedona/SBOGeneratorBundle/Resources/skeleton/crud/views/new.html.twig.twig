@@ -1,0 +1,33 @@
+{% block extends %}
+{{ "{% extends '::layout_admin.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+
+{{ "{% block page_title %}" }}
+{{ "    {{ \"crud.title.new\"|trans([], 'admin') }}" }}
+{{ "{% endblock %}" }}
+
+{{ "{% block page_subtitle %}" }}
+{{ '    {{ "admin.' ~ entity|lower ~ '.entity_name"|trans([], "admin") }}' }}
+{{ "{% endblock %}" }}
+
+{{ "{% block content %}" }}
+    <div class="box box-solid">
+        {{ "{{ form_start(form) }}" }}
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-12">
+                    {{ "{% include '" ~ bundle ~ ":Admin/" ~ entity ~ ":" ~ "form.html.twig' %}" }}
+                </div>
+            </div>
+        </div>
+        <div class="box-footer text-center">
+            {{ "{{ form_widget(form.create, { 'label': 'crud.form.new'|trans([], 'admin'), 'glyphicon':'save' }) }}" }}
+            <a href="{{ "{{ path('admin_" ~ entity|lower ~ "_list') }}" }}" class="btn btn-default">{{ "{{ 'crud.form.cancel'|trans([], 'admin')|addGlyphicon(\"ban-circle\") }}" }}</a>
+            {{ "{{ form_rest(form) }}" }}
+        </div>
+        {{ "{{ form_end(form) }}" }}
+    </div>
+{{ "{% endblock %}" }}
+{% endblock body %}

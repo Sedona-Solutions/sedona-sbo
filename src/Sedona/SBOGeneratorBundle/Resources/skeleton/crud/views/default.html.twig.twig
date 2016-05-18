@@ -1,0 +1,29 @@
+{% block extends %}
+    {{ "{% extends '::layout_admin.html.twig' %}" }}
+{% endblock extends %}
+
+{% block body %}
+
+    {{ "{% block page_title %}" }}
+        Administration
+    {{ "{% endblock %}" }}
+
+    {{ "{% block page_subtitle %}" }}
+
+    {{ "{% endblock %}" }}
+
+    {{ "{% block content %}" }}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-body table-responsive">
+                    Welcome
+                </div>
+                <div class="box-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ "{% endblock %}" }}
+{% endblock body %}

@@ -1,0 +1,23 @@
+
+    /**
+{% block phpdoc_method_header %}
+     * Lists all {{ entity }} entities.
+{% endblock phpdoc_method_header %}
+     *
+{% block phpdoc_method_annotations %}
+{% if 'annotation' == format %}
+     * @Route("/", name="admin_{{ entity|lower }}_list")
+     * @Method("GET")
+{% endif %}
+{% endblock phpdoc_method_annotations %}
+     */
+{% block method_definition %}
+    public function indexAction()
+{% endblock method_definition %}
+    {
+{% block method_body %}
+{% endblock method_body %}
+{% block method_return %}
+        return $this->manageIndex();
+{% endblock method_return %}
+    }

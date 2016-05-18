@@ -1,0 +1,93 @@
+<?php
+
+namespace {{ namespace }}\Controller{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\Admin;
+
+{% block use_statements %}
+{% if 'new' in actions or 'edit' in actions or 'delete' in actions %}
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+{%- endif %}
+
+{% if 'annotation' == format -%}
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+{%- endif %}
+
+use {{ namespace }}\Entity\{{ entity }};
+{% if 'new' in actions or 'edit' in actions %}
+use {{ namespace }}\Form\Admin\{{ entity }}Type;
+{% endif %}
+{% set classUses = [ namespace ~'\\Entity\\'~ entity ] %}
+{% for field, metadata in fields if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] and (metadata['targetEntity'] not in classUses) %}
+use {{ metadata['targetEntity'] }};
+{% set classUses = classUses|merge([ metadata['targetEntity']]) %}
+{% endfor %}
+{% endblock use_statements %}
+
+/**
+{% block phpdoc_class_header %}
+ * {{ entity }} controller.
+{% endblock phpdoc_class_header %}
+ *
+{% block phpdoc_class_annotations %}
+{% if 'annotation' == format %}
+ * @Route("/{{ route_prefix }}")
+{% endif %}
+{% endblock phpdoc_class_annotations %}
+ */
+{% block class_definition %}
+class {{ entity_class }}Controller extends BaseCrudController
+{% endblock class_definition %}
+{
+    protected $route_name = 'admin_{{ entity|lower }}';
+    protected $bundle_name = '{{ bundle }}';
+    protected $entity_name = '{{ entity }}';
+{% block class_body %}
+    {%- if 'index' in actions %}
+        {%- include 'crud/actions/index.php.twig' %}
+    {%- endif %}
+
+    {%- if 'datatable' in actions %}
+        {%- include 'crud/actions/datatable.php.twig' %}
+    {%- endif %}
+
+    {%- if 'new' in actions %}
+        {%- include 'crud/actions/new.php.twig' %}
+    {%- endif %}
+
+    {%- if 'edit' in actions %}
+
+        {%- for field, metadata in fields if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE')] %}
+            {%- include 'crud/actions/entity_search.php.twig' %}
+        {% endfor %}
+
+        {%- include 'crud/actions/edit.php.twig' %}
+
+    {%- endif %}
+
+    {%- if 'show' in actions %}
+        {%- include 'crud/actions/show.php.twig' %}
+    {%- endif %}
+
+    {%- for field, metadata in fields if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] %}
+        {%- if 'show' in actions %}
+
+            {{ renderFile('datatable/collection_Datatable.php.twig', dir ~'/Datatables/'~entity~field|capitalize~'Datatable.php',{'tabname':field,'field': field ,'metadata': metadata }) }}
+
+            {%- include 'crud/actions/collection_index.php.twig' %}
+
+            {%- include 'crud/actions/collection_datatable.php.twig' %}
+
+            {%- include 'crud/actions/collection_search.php.twig' %}
+
+            {% include 'crud/actions/collection_add.php.twig' %}
+
+            {% include 'crud/actions/collection_remove.php.twig' %}
+        {%- endif %}
+    {% endfor %}
+
+
+{% endblock class_body %}
+
+}
