@@ -9,20 +9,20 @@ Installation
  - Symfony 2.7
 
 
-### Step 1: Download the Bundle
+### Step 1: Download the Bundles
 
 Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
+following command to download the latest version of this bundle:
 
 ```bash
-$ composer require "sedona/sbo" "~1"
+$ composer require "sedona/sbo" "dev-master"
 ```
 
 This command requires you to have Composer installed globally, as explained
 in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
 of the Composer documentation.
 
-### Step 2: Enable the Bundle
+### Step 2: Enable the Bundles
 
 Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project, if you don't use them
@@ -118,5 +118,25 @@ Association fields OneToMany are created but commented by default:
 * in datatable: before uncommenting, the column name should be changed (entity.name by default)
 * in form: only entities with few lines should be uncommented, for long datas, should be replaced by a select2
 
+Credits
+-------
 
+Sedona Back Office is created and maintained by Sedona
+http://www.sedona.fr
+
+It is available under the MIT Licence, more details in the LICENCE file.
+
+We would like to thanks the authors of the different libraries and bundle
+used in this solution.
+
+* SBOGeneratorBundle is based on SensioGeneratorBundle from SensioLabs
+https://github.com/sensiolabs/SensioGeneratorBundle
+* SBORuntimeBundle extends AvanzuAdminThemeBundle from Avanzu
+https://github.com/avanzu/AdminThemeBundle
+which is a Symfony implementation of the AdminLTE template from Almsaeed Studio
+https://github.com/almasaeed2010/AdminLTE
+* Genererated Datatable use SgDatatablesBundle from Stwe
+https://github.com/stwe/DatatablesBundle
+which implements JQuery Datatable
+https://datatables.net/
 
