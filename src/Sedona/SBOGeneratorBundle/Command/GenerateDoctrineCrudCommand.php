@@ -336,7 +336,6 @@ EOT
         }
 
         $skeletonDirs[] = __DIR__.'/../Resources/skeleton';
-        $skeletonDirs[] = __DIR__.'/../Resources';
 
         return $skeletonDirs;
     }
