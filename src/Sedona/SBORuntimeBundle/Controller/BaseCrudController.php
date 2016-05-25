@@ -549,30 +549,23 @@ abstract class BaseCrudController extends Controller
 
         $querySearch = function (\Doctrine\ORM\QueryBuilder $queryBuilder, $query) use ($entity, $field, $fieldSearch, $fieldClass) {
 
-//            $subQuery = $queryBuilder->getEntityManager()->createQueryBuilder();
-//            $subQuery
-//                ->select("field.id")
-//                ->from(get_class($entity), 'entity')
-//                ->join($field, 'field')
-//                ->where("entity.id = :entity_id")
-//                ->setParameter('entity_id', $entity->getId());
-//
-//            $queryBuilder
-//                ->andWhere($queryBuilder->expr()->notIn('o.id',
-//                    'SELECT field.id FROM '.get_class($entity).' entity JOIN entity.'.$field.' field WHERE entity.id = :entity_id'))
-//                ->setParameter('entity_id', $entity->getId())
-//                ->andWhere('o.'.$fieldSearch.' LIKE :'.$fieldSearch)
-//                ->setParameter($fieldSearch, "%$query%")
-//                ->orderBy('o.'.$fieldSearch)
+            $subQuery = $queryBuilder->getEntityManager()->createQueryBuilder();
+            $subQuery
+                ->select("field.id")
+                ->from(get_class($entity), 'entity')
+                ->join('entity.'.$field, 'field')
+                ->where("entity.id = :entity_id")
+                ->setParameter('entity_id', $entity->getId())
+            ;
 
             $queryBuilder
-                ->andWhere($queryBuilder->expr()->notIn('o.id',
-                    'SELECT field.id FROM '.get_class($entity).' entity JOIN entity.'.$field.' field WHERE entity.id = :entity_id'))
+                ->andWhere($queryBuilder->expr()->notIn('o.id',$subQuery->getDql()))
                 ->setParameter('entity_id', $entity->getId())
                 ->andWhere('o.'.$fieldSearch.' LIKE :'.$fieldSearch)
                 ->setParameter($fieldSearch, "%$query%")
                 ->orderBy('o.'.$fieldSearch)
             ;
+
         };
 
         $fieldClassName = substr($fieldClass, strripos($fieldClass, '\\') + 1);
