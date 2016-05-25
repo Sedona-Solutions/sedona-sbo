@@ -759,7 +759,7 @@ class DatatableQuery extends DatatableQueryBase
 
                     $data[] = [
                         $id => $this->propertyAccessor->getValue($item, $id),
-                        $parts[1] => $this->propertyAccessor->getValue($item, $parts[1]),
+                        $parts[0] => $this->propertyAccessor->getValue($item, $parts[0]),
                     ];
                 }
 

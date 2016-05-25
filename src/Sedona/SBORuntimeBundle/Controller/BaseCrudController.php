@@ -391,7 +391,7 @@ abstract class BaseCrudController extends Controller
         }
 
         $postDatatable = $this->get($this->route_name.'_'.$field.'_datatable');
-        $postDatatable->buildDatatable();
+        $postDatatable->buildDatatable(['entity' => $entity]);
 
         if (method_exists($postDatatable, 'addLineFormatter') && method_exists($entity, 'getId')) {
             $postDatatable->addLineFormatter(function ($ligne) use ($entity) {
