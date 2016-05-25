@@ -254,7 +254,7 @@ class DatatableQuery extends DatatableQueryBase
                     if (!$this->metadata->hasField($data)) {
                         $reflection = $this->metadata->getReflectionClass();
                         if (
-                            ClassUtils::hasTrait($reflection, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', true) and
+                            ClassUtils::hasTrait($reflection, 'Knp\DoctrineBehaviors\Model\Translatable\Translatable', true) &&
                             $this->em->getClassMetadata(call_user_func([$reflection->getName(), 'getTranslationEntityClass']))->hasField($data)
                         ) {
                             $this->setIdentifierFromAssociation('translations');

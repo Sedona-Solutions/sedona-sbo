@@ -366,7 +366,7 @@ abstract class BaseCrudController extends Controller
     /**
      * @return Response
      */
-    public function manageDatatableJson()
+    protected function manageDatatableJson()
     {
         $postDatatable = $this->get($this->route_name.'_datatable');
         $postDatatable->buildDatatable();
