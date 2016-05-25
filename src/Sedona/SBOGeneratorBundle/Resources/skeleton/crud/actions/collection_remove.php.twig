@@ -20,6 +20,6 @@
 {% block method_body %}
 {% endblock method_body %}
 {% block method_return %}
-        return $this->manageJsonAction(${{ entity|lower }}, {{ objectname }}, '{{ field }}', '{{ 'remove'~field|capitalize }}', true);
+        return $this->manageJson(${{ entity|lower }}, {{ objectname }}, '{{ field }}', '{{ 'remove'~field|capitalize }}', true);
 {% endblock method_return %}
     }

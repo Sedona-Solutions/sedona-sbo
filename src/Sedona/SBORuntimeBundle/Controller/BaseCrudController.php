@@ -116,10 +116,10 @@ abstract class BaseCrudController extends Controller
         if ($form->isSubmitted()) {
             if ($form->get('save')->isClicked()) {
                 if ($form->isValid()) {
-                    return $this->crudAction($entity, AdminCrudEvent::UPDATE);
+                    return $this->crudManage($entity, AdminCrudEvent::UPDATE);
                 }
             } elseif ($form->get('delete')->isClicked()) {
-                return $this->crudAction($entity, AdminCrudEvent::DELETE);
+                return $this->crudManage($entity, AdminCrudEvent::DELETE);
             }
         }
 
@@ -152,7 +152,7 @@ abstract class BaseCrudController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            return $this->crudAction($entity, AdminCrudEvent::CREATE);
+            return $this->crudManage($entity, AdminCrudEvent::CREATE);
         }
 
         return $this->render(
@@ -171,10 +171,10 @@ abstract class BaseCrudController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function crudAction($entity, $action)
+    protected function crudManage($entity, $action)
     {
         // Before, send preAction
-        $event = $this->dispatchCrudEventPreAction($entity, $action);
+        $event = $this->dispatchPreActionCrudEvent($entity, $action);
         $em = $this->getDoctrine()->getManager();
 
         // Update entity according to action (can be changed in event)
@@ -191,7 +191,7 @@ abstract class BaseCrudController extends Controller
         }
 
         // Send postAction Event
-        $event = $this->dispatchCrudEventPostAction($entity, $action);
+        $event = $this->dispatchPostActionCrudEvent($entity, $action);
 
         switch ($event->getAction()) {
             case AdminCrudEvent::CREATE;
@@ -219,7 +219,7 @@ abstract class BaseCrudController extends Controller
      *
      * @return AdminCrudEvent
      */
-    protected function dispatchCrudEventPreAction($entity, $action)
+    protected function dispatchPreActionCrudEvent($entity, $action)
     {
         return $this->dispatchCrudEvent($entity, $action, 'sbo.crud.preAction');
     }
@@ -232,7 +232,7 @@ abstract class BaseCrudController extends Controller
      *
      * @return AdminCrudEvent
      */
-    protected function dispatchCrudEventPostAction($entity, $action)
+    protected function dispatchPostActionCrudEvent($entity, $action)
     {
         return $this->dispatchCrudEvent($entity, $action, 'sbo.crud.postAction');
     }
@@ -262,7 +262,7 @@ abstract class BaseCrudController extends Controller
      *
      * @return AdminAssociationActionEvent
      */
-    protected function dispatchAssociationActionEventPreAction($entity, $action, $target)
+    protected function dispatchPreActionAssociationActionEvent($entity, $action, $target)
     {
         return $this->dispatchAssociationActionEvent($entity, $action, $target, 'sbo.association.preAction');
     }
@@ -275,7 +275,7 @@ abstract class BaseCrudController extends Controller
      *
      * @return AdminAssociationActionEvent
      */
-    protected function dispatchAssociationActionEventPostAction($entity, $action, $target)
+    protected function dispatchPostActionAssociationActionEvent($entity, $action, $target)
     {
         return $this->dispatchAssociationActionEvent($entity, $action, $target, 'sbo.association.postAction');
     }
@@ -600,14 +600,14 @@ abstract class BaseCrudController extends Controller
      *
      * @return JsonResponse
      */
-    protected function manageJsonAction($source, $target, $field, $action, $contains = true)
+    protected function manageJson($source, $target, $field, $action, $contains = true)
     {
         $res = ['result' => true, 'message' => ''];
 
         $getter = $this->getGetter($field);
 
         if ($source->$getter()->contains($target) == $contains) {
-            $event = $this->dispatchAssociationActionEventPreAction($source, $action, $target);
+            $event = $this->dispatchPreActionAssociationActionEvent($source, $action, $target);
 
             if ($event->getAction() != AdminAssociationActionEvent::DONT_TOUCH) {
                 $source2 = $event->getItem();
@@ -619,7 +619,7 @@ abstract class BaseCrudController extends Controller
             }
             //$res['html'] = $this->get("twig")->render("SedonaSBOTestBundle:Admin/Artist:_renderAlbum.html.twig", ['object'=>$target]);
 
-            $event = $this->dispatchAssociationActionEventPostAction($source, $action, $target);
+            $event = $this->dispatchPostActionAssociationActionEvent($source, $action, $target);
         }
 
         return new JsonResponse($res);
