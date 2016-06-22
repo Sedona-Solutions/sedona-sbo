@@ -40,16 +40,30 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
                 'route' => 'admin_{{ targetClassName|lower }}_show',
                 'route_parameters' => array('id' => 'id'),
                 'label' => $this->translator->trans('crud.title.show', [], 'admin'),
-                'icon' => 'glyphicon glyphicon-eye-open',
+                'icon' => 'glyphicon glyphicon-book',
                 'attributes' => array(
                     'rel' => 'tooltip',
-                    'title' => 'Show',
+                    'title' => $this->translator->trans('crud.title.show', [], 'admin'),
                     'class' => 'btn btn-default btn-xs',
                     'role' => 'button'
                 )
             ];
         }
-        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_{{ field|lower }}_remove') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_edit') != null) {
+            $actions[] = [
+                'route' => 'admin_{{ targetClassName|lower }}_edit',
+                'route_parameters' => array('id' => 'id'),
+                'label' => $this->translator->trans('crud.title.edit', [], 'admin'),
+                'icon' => 'glyphicon glyphicon-edit',
+                'attributes' => array(
+                    'rel' => 'tooltip',
+                    'title' => $this->translator->trans('crud.title.edit', [], 'admin'),
+                    'class' => 'btn btn-default btn-xs',
+                    'role' => 'button'
+                )
+            ];
+        }
+        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_delete') != null) {
             $actions[] = [
                 'route' => 'admin_{{ entity|lower }}_{{ field|lower }}_remove',
                 'route_parameters' => array('{{ targetClassName|lower }}_id' => 'id', 'id' => '{{ metadata['mappedBy'] is not empty ? metadata['mappedBy'] : metadata['inversedBy'] }}{{  metadata['type'] == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') ? '[0]' : '' }}.id' ),

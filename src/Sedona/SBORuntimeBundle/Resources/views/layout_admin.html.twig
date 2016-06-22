@@ -1,17 +1,18 @@
 {% extends 'AvanzuAdminThemeBundle:layout:base-layout.html.twig' %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/styles/admin-lte-all.css') }}" />
-    <link rel="stylesheet" href="{{ asset('bundles/sedonasboruntime/vendor/select2/select2.css') }}" />
+    {{ parent() }}
+    {% for asset_url in [
+        'assets/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
+        'assets/select2/select2.css',
+        ] %}
+            <link rel="stylesheet" href="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}" type="text/css"/>
+    {% endfor %}
 {% endblock %}
 
 {%  block javascripts_head %}
-    <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/scripts/modernizr.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~ app.environment ~'/scripts/admin-lte-all.js') }}"></script>
-    <!--[if lt IE 9]>
-
-    <![endif]-->
-
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/avanzuadmintheme/static/'~app.environment~'/scripts/admin-lte-all.js') }}"></script>
 {% endblock %}
 
 {% block title %}
@@ -32,20 +33,31 @@
 {% endblock page_content %}
 
 {% block javascripts %}
-    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-
     <script language="JavaScript">
-    var myApplication = {
-        locale: '{{ app.request.locale }}'
-    }
+        var myApplication = {
+            locale: '{{ app.request.locale }}'
+        }
     </script>
-    <script src="{{ asset('bundles/sedonasboruntime/vendor/select2/select2.js') }}"></script>
-    {% if app.request.locale != 'en' %}
-    <script src="{{ asset('bundles/sedonasboruntime/vendor/select2/select2_locale_'~app.request.locale~'.js') }}"></script>
-    <script src="{{ asset('bundles/sedonasboruntime/vendor/moment/locale/'~app.request.locale~'.js') }}"></script>
+
+    {% for asset_url in [
+        'bundles/fosjsrouting/js/router.js',
+        'assets/moment/min/moment.min.js',
+        'assets/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+        'assets/select2/select2.js',
+        'bundles/sedonasboruntime/js/SBOExtra.js'
+        ] %}
+            <script type="text/javascript" src="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}"></script>
+    {% endfor %}
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+    {%if app.request.getLocale() != 'en' %}
+        {% for asset_url in [
+            'assets/moment/locale/'~app.request.getLocale()~'.js',
+            'assets/select2/select2_locale_'~app.request.getLocale()~'.js'
+            ] %}
+                <script type="text/javascript" src="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}"></script>
+        {% endfor %}
     {% endif %}
-    <script type="text/javascript" src="{{ asset('bundles/sedonasboruntime/js/SBOExtra.js') }}"></script>
 {% endblock %}
 
 {% block avanzu_admin_footer %}
