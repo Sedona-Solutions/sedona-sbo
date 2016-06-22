@@ -1,37 +1,19 @@
 
 (function($){
     "use strict";
-    //$('[data-timepicker]').timepicker();
-    //var format, picker = $('[data-datepicker]');
-    //for(var n = 0;  n < picker.length; ++n) {
-    //    format = $(picker[n]).attr('data-format') || 'yy-mm-dd';
-    //    $(picker[n]).datepicker({
-    //        showInputs: false,
-    //        dateFormat: format
-    //    });
-    //}
+    $('[data-timepicker]').datetimepicker({
+        locale: myApplication.locale,
+        format: 'LT'
+    });
 
-    // $('[data-timepicker]').datetimepicker({
-    //     pickDate: false,
-    //     pickTime: true,
-    //     useSeconds: true,
-    //     language: myApplication.locale
-    // });
-    //
-    // $('[data-datepicker]').datetimepicker({
-    //     pickDate: true,
-    //     pickTime: false,
-    //     language: myApplication.locale
-    // });
-    //
-    // $('[data-datetimepicker]').datetimepicker({
-    //     pickDate: true,
-    //     pickTime: true,
-    //     useSeconds: true,
-    //     language: myApplication.locale
-    // });
+    $('[data-datepicker]').datetimepicker({
+        locale: myApplication.locale,
+        format: 'L'
+    });
 
-
+    $('[data-datetimepicker]').datetimepicker({
+        locale: myApplication.locale
+    });
 
     $(document)
     // -- ionRangeSlider ------------------------------------------------------------------------------------------
