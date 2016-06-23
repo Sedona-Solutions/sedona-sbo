@@ -112,41 +112,43 @@
             });
         })
         // ---- tabajax ------------------------------------------------------------------------------------------------
-        .on('click', '[data-toggle="tabajax"]', function(e) {
-            var $this = $(this),
-                loadurl = $this.attr('href'),
-                $tabTarg = $($this.data('target')),
-                $tabCurrent = $($this.parents('.nav-tabs:first')
-                    .find('.active [data-toggle=tab]')
-                    .attr('href')
-                );
+        .on('click', '[data-toggle="tabajax"]', function (e) {
+            var $tab = $(this),
+                url = $tab.attr('href'),
+                targ = $tab.data('target');
 
-            //
-            $tabTarg.height($tabCurrent.height());
+            $(targ).load(url, function (response, status, xhr) {
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: ";
+                    $(this).htmlPolyfill(
+                        '<div class="alert alert-danger alert-dismissable"><a href="'
+                        + url + '" data-toggle="loadAndReplace" data-target="'
+                        + targ + '" class="close">×</a> '
+                        + msg + xhr.status + " " + xhr.statusText + '</div>'
+                        + response
+                    );
+                }
+                $(document).trigger('sonata-admin-append-form-element');
 
-            $.get(loadurl, function(data) {
-                $tabTarg
-                    .height('auto')
-                    .html(data);
-                $this
-                    .attr('data-toggle','tab')
-                    .attr('href',$this.data('target'))
+                $tab
+                    .attr('data-toggle', 'tab')
+                    .attr('href', $tab.data('target'))
                     .removeAttr('data-target')
-                ;
-                $tabTarg.find('[data-toggle="select2-remote"]').select2remote();
             });
 
-            /* Update hash based on tab */
-            window.location = $(this).data("target");
-            scrollTo(0,0);
-
-            $this.tab('show');
+            $tab.tab('show');
             return false;
         })
         .on('click', "[data-toggle=pill],[data-toggle=tab]",function (event) {
             /* Update hash based on tab */
-            window.location =  $(this).attr("href");
-            scrollTo(0,0);
+            var url = $(this).attr("href").split('#');
+            if(url[1] != undefined) {
+                event.preventDefault();
+                $('[data-toggle="tab"][href=#' + url[1] + ']').tab('show');
+            } else {
+                window.location =  $(this).attr("href");
+                scrollTo(0,0);
+            }
         })
         .on('ready', function(){
             /* Automagically jump on good tab based on anchor */
@@ -241,7 +243,6 @@
                 },
                 appendData = function($target, content) {
                     var $row = arguments.length>1 ? arguments[2] : null;
-                    console.log($row);
                     if ($target.is('tbody') && $.fn.dataTable.isDataTable($target.parents('table:first'))) {
                         $($target.parents('table:first')).Datatable().draw();
                     } else if ($target.is('table') && $.fn.dataTable.isDataTable($target))  {
@@ -384,6 +385,214 @@
         })
         .on('ready loaded.bs.modal',function(){
             $('[data-toggle="select2-remote"]').select2remote();
+        })
+    ;
+
+
+    /**
+     * Masque ou affiche cette elements en fonction de la présenece dans la page d'un selecteur
+     * <input type="button"
+     *          data-toggle="hide-if-no-found"      Obligatoire > hide ou show en fonction du besoin
+     *          data-spy=":radio"                   Obligatoire > elements sur lequelles seront déclachée la verification d'affichage
+     *          data-target=":radio:checked"        Obligatoire > selecteur pour lequelle on va verifié
+     *          data-parent="tr"                    Optionnel   > selecteur du parants a affichée ou masqée si ce n'est pas cette elements, par défaut c'est l'element de base
+     *      />
+     */
+    $.fn.ifNoFound = function() {
+        this.each(function (i,el) {
+            var $this = $(el);
+            var object = {
+                '$spy' : $this.is('[data-spy]') ? $this.attr('data-spy') : $this,
+                '$cible' : $this.is('[data-parent]') ? $this.parents($this.attr('data-parent')).first() : $this,
+
+                'find' : function() {
+                    return $($this.attr('data-target')).length==0;
+                },
+
+                'test' : function() {
+                    $.each(object.testFunction,function(attrName,fn){
+                        if($this.is('[data-toggle^="'+attrName+'"]')) {
+                            fn();
+                        }
+                    });
+                },
+
+                'testFunction' : {
+                    'hide-if-no-found' : function() {
+                        //console.log("hide-if-no-found",
+                        //    $this.attr('data-target'),
+                        //    object.find(),
+                        //    object.$cible,
+                        //    object.$cible.filter(':visible')
+                        //);
+                        if (object.find()) {
+                            object.$cible.filter(':visible').stop().slideUp();
+                        } else {
+                            object.$cible.filter(':hidden').stop().slideDown();
+                        }
+                    },
+                    'show-if-no-found' : function() {
+                        if (object.find()) {
+                            object.$cible.filter(':hidden').stop().slideDown();
+                        } else {
+                            object.$cible.filter(':visible').stop().slideUp();
+                        }
+                    },
+                    "disable-if-no-found" : function() {
+                        if (object.find()) {
+                            object.$cible.attr('disabled','disabled');
+                        } else {
+                            object.$cible.removeAttr('disabled');
+                        }
+                    },
+                    "enable-if-no-found" : function() {
+                        if (object.find()) {
+                            object.$cible.filter(':disabled').removeAttr('disabled');
+                        } else {
+                            object.$cible.filter(':enabled').attr('disabled','disabled');
+                        }
+                    },
+                    "visible-if-no-found" : function() {
+                        //console.log('visible-if-no-found',object.$cible,object.find());
+                        if (object.find()) {
+                            object.$cible.css('visibility','visible');
+                        } else {
+                            object.$cible.css('visibility','hidden');
+                        }
+                    }
+                },
+
+                'openModal': function(event) {
+                    event.stopPropagation();
+                    if(true) { // désactiver , a modifier + trad {$this.parents('form').checkValidity()) {
+                        var op = {'show':true};
+                        if ($this.is('[href]')) {
+                            op['remote'] = $this.attr('href');
+                        }
+                        $($this.attr('data-href')).modal(op, this);
+                    } else {
+                        var $form = $this.parents('form:first');
+                        $form.find(":valid").each(function( index, node ) {
+                            $(node).tooltip('destroy');
+                        });
+                        $form.find("input:invalid, select:invalid, textarea:invalid").each(function( index, node ) {
+                            $(node)
+                                .attr('data-toggle','tooltip')
+                                .attr('data-original-title','mandatory')
+                                .tooltip({'template': '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title">'+( node.validationMessage || 'This field is mandatory!')+'</h3><div class="popover-content"></div></div>'})
+                                .tooltip('show');
+                            if(index == 0) {
+                                $('html,body').animate({scrollTop: $(node).offset().top-250}, 'slow');
+                            }
+                        });
+                    }
+                    return false;
+                }
+            };
+
+            $(document).on('click change keyup', object.$spy, object.test);
+            object.test();
+            $this.data('ifNoFound',object);
+
+            if ($this.is('[data-toggle$="-modal"]') && $this.is('[data-href]')) {
+                $this.on('click',object.openModal);
+            }
+        });
+        return this;
+    };
+
+    $(document)
+        .on('focus click loaded.bs.modal',
+        '[data-toggle*="-if-no-found"]',
+        function(e){
+            var $this = $(this);
+            if ($this.data('ifNoFound'))
+                return;
+            e.preventDefault();
+            // component click requires us to explicitly show it
+            $this.ifNoFound();
+        })
+        .on('ready',function(){
+            $('[data-toggle*="-if-no-found"]').ifNoFound();
+        })
+    ;
+
+    /** ---------------------------- form sending by ajax ---------------------- **/
+    $(document)
+        /* -- sur le clique d'un bouton, changement de label ------------------------------------------------------- */
+        .on('submit','form[data-toggle="ajax-submit"]',function(e) {
+            // j'empecher l'envoie du formulaire car je dois pas�e par les requette Ajax.
+            // elle font un return true pour laisser l'execution de tous les differants scripts...
+            return false;
+        })
+        .on('submit click','form[data-toggle="ajax-submit"] :submit',function(e) {
+            var $button = $(this),
+                $form = $button.parents('form:first'),
+                $content = $form.data('target') != undefined ? $($form.data('target')) : $form;
+
+            e.preventDefault();
+            var url = $button.attr('formaction') ? $button.attr('formaction') : $form.attr('action');
+
+            $form.find('.form-error').removeClass('form-error');
+            $form.find('[required]').each(function(){
+                var $this = $(this);
+                if($this.val() == null || $this.val() == ""){
+                    $this.addClass('form-error');
+                }
+            });
+
+
+            if($form.find('.form-error').size() > 0) {
+                window.setTimeout(function(){
+                    $button.button('reset');
+                },0);
+            }
+
+            $form.ajaxSubmit({
+                url: url,
+                type: "POST",
+                success: function(html){
+
+                    if (html == '') { // ok
+                        window.location.reload();
+                    } else {
+                        $content.html(html);
+                        $(document).trigger('sonata-admin-append-form-element');
+                    }
+                },
+                error: function (ajaxContext) {
+                    alert(ajaxContext.responseText)
+                }
+            });
+        })
+    ;
+
+    /** ---------------------------- add and remove collection element ---------------------- **/
+    $(document)
+        .on('focus click', '[data-toggle="remove-element"]', function (e) {
+            var $this = $(this),
+                $target = $this.data('parent') != undefined ? $this.parents($this.data('parent')).first()  : $this;
+            $target.remove();
+        })
+        .on('focus click', '[data-toggle="add-prototype"]', function (e) {
+            var $this = $(this),
+                prototypeCount = $this.data('count'),
+                $prototype = $this.data('target') != undefined ? ($this.siblings($this.data('target')) != undefined ? $this.siblings($this.data('target')) : $($this.data('target'))) : $this,
+            // grab the prototype template
+                newWidget = $prototype.data('prototype');
+
+            e.preventDefault();
+
+            // replace the "__name__" used in the id and name of the prototype
+            // with a number that's unique to your emails
+            // end name attribute looks like name="contact[emails][2]"
+            prototypeCount++;
+            newWidget = newWidget.replace(/__name__/g, prototypeCount);
+
+            // create a new list element and add it to the list
+            $prototype.append(newWidget);
+            $this.data('count',prototypeCount);
+            $(document).trigger('sonata-admin-append-form-element');
         })
     ;
 
