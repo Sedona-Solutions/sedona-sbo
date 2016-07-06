@@ -6,7 +6,7 @@ Installation
 
 ### Requirements
 
- - Symfony 2.7
+ - Symfony 2.7 mini, compatible with Symfony 3
 
 
 ### Step 1: Download the Bundles
