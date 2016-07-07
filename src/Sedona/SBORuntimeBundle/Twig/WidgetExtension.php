@@ -55,8 +55,30 @@ class WidgetExtension extends \Twig_Extension
             'addGlyphicon' => new \Twig_SimpleFilter(
                 'addGlyphicon',
                 array($this, 'addGlyphicon'),
-                array('pre_escape' => 'html', 'is_safe' => array('html')))
+                array('pre_escape' => 'html', 'is_safe' => array('html'))),
+            'purify' => new \Twig_SimpleFilter(
+                'purify',
+                array($this, 'purify'),
+                array('is_safe' => array('html')))
         );
+    }
+
+    public function purify($text, $light_mode = false)
+    {
+        //Version with preg_replace => light mode
+        if($light_mode) {
+            //Remove iframe
+            $text = preg_replace('/<iframe(.*?)>(.*?)<\/iframe>/is', '', $text);
+            //Remove script (js)
+            $text = preg_replace('/<script(.*?)>(.*?)<\/script>/is', '', $text);
+            return $text;
+        }
+
+        //Version with purifier => heavy mode (by default)
+        $config = \HTMLPurifier_Config::createDefault();
+        $config->set("HTML.ForbiddenElements", ['script', 'iframe']);
+        $purificateur = new \HTMLPurifier($config);
+        return $purificateur->purify($text);
     }
 
     public function getFunctions()
