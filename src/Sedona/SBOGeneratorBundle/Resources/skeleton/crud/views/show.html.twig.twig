@@ -48,7 +48,7 @@
                                     <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ '|join(",") }}' }}</td>
 
                                 {%- elseif metadata.type == 'text' %}
-                                    <td>{{ '{{ entity.' ~ field ~ '|raw }}' }}</td>
+                                    <td>{{ '{{ entity.' ~ field ~ '|purify }}' }}</td>
 
                                 {%- else %}
 
@@ -88,9 +88,9 @@
 
                 {%- if loop.last %}
                 <form role="form">
-                    {{ data|raw }}
+                    {{ data|purify }}
                     <div class="text-center">
-                        {{ button|raw }}
+                        {{ button|purify }}
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -112,8 +112,8 @@
         <div class="box-header">
             <h3 class="box-title">{{ "{{ entity }}" }}</h3>
         </div>
-        <div class="box-body">{{ data|raw }}</div>
-        <div class="box-footer">{{ button|raw }}</div>
+        <div class="box-body">{{ data|purify }}</div>
+        <div class="box-footer">{{ button|purify }}</div>
         </form>
     </div>
     {%- endif %#}
