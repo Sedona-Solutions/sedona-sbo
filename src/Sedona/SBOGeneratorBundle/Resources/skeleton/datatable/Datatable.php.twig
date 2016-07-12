@@ -60,7 +60,7 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
         if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_delete') != null) {
             $actions[] = [
                 'route' => 'admin_{{ entity|lower }}_delete',
-                'route_parameters' => array('{{ targetClassName|lower }}_id' => 'id', 'id' => '{{ metadata['mappedBy'] is not empty ? metadata['mappedBy'] : metadata['inversedBy'] }}{{  metadata['type'] == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') ? '[0]' : '' }}.id' ),
+                'route_parameters' => array('id' => 'id'),
                 'label' => $this->translator->trans('crud.title.delete', [], 'admin'),
                 'icon' => 'glyphicon glyphicon-remove-circle',
                 'attributes' => array(
