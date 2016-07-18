@@ -26,10 +26,8 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
-
 /**
  * Generates a CRUD for a Doctrine entity.
- *
  */
 class GenerateDoctrineCrudCommand extends GenerateDoctrineCommand
 {
@@ -221,7 +219,7 @@ EOT
     {
         try {
             $this->getFormGenerator($bundle)->generate($bundle, $entity, $metadata[0], $forceOverwrite);
-        } catch (\RuntimeException $e ) {
+        } catch (\RuntimeException $e) {
             // form already exists
         }
     }
@@ -233,7 +231,7 @@ EOT
     {
         try {
             $this->getDatatableGenerator($bundle)->generate($bundle, $entity, $metadata[0], $forceOverwrite);
-        } catch (\RuntimeException $e ) {
+        } catch (\RuntimeException $e) {
             // form already exists
         }
     }
@@ -245,7 +243,7 @@ EOT
     {
         try {
             $this->getTranslationsGenerator($bundle)->generate($bundle, $entity, $metadata[0], $forceOverwrite);
-        } catch (\RuntimeException $e ) {
+        } catch (\RuntimeException $e) {
             // form already exists
         }
     }
@@ -317,7 +315,7 @@ EOT
     protected function getEntityMetadata($entity)
     {
         $factory = new ClassMetadataFactory();
-        $factory->setEntityManager($this->getContainer()->get("doctrine.orm.entity_manager"));
+        $factory->setEntityManager($this->getContainer()->get('doctrine.orm.entity_manager'));
         $metadata = $factory->getMetadataFor($entity);
 
         return array($metadata);
@@ -339,5 +337,4 @@ EOT
 
         return $skeletonDirs;
     }
-
 }

@@ -15,8 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class AdminAssociationActionEvent
- * @package Sedona\SBORuntimeBundle\Event
+ * Class AdminAssociationActionEvent.
  */
 class AdminAssociationActionEvent extends Event
 {
@@ -66,6 +65,7 @@ class AdminAssociationActionEvent extends Event
 
     /**
      * @param $action
+     *
      * @return mixed
      */
     public function setAction($action)

@@ -12,17 +12,16 @@
 namespace Sedona\SBORuntimeBundle;
 
 /**
- * Class ClassUtils
- * @package Sedona\SBORuntimeBundle
+ * Class ClassUtils.
  */
 class ClassUtils
 {
     /**
-     * Return true if the given object use the given trait, FALSE if not
+     * Return true if the given object use the given trait, FALSE if not.
      *
      * @param \ReflectionClass|string $class
-     * @param string $traitName
-     * @param boolean $isRecursive
+     * @param string                  $traitName
+     * @param bool                    $isRecursive
      *
      * @return bool
      */

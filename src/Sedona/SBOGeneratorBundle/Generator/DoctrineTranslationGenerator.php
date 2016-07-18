@@ -53,29 +53,27 @@ class DoctrineTranslationGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $forceOverwrite)
     {
-        $parts       = explode('\\', $entity);
+        $parts = explode('\\', $entity);
         $entityClass = array_pop($parts);
 
-        $langs = ['fr','en'];
+        $langs = ['fr', 'en'];
 
         $this->className = $entityClass.'Type';
-        $dirPath         = $bundle->getPath().'/Resources/translations';
+        $dirPath = $bundle->getPath().'/Resources/translations';
 
-        foreach($langs as $lang) {
+        foreach ($langs as $lang) {
             $this->classPath = $dirPath.'/'.'admin.'.$lang.'.yml';
-            $translations = "";
-            $entityHeader = str_repeat(" ",4).strtolower($entityClass).":\n";
+            $translations = '';
+            $entityHeader = str_repeat(' ', 4).strtolower($entityClass).":\n";
 
             if (file_exists($this->classPath)) {
                 $translations = file_get_contents($this->classPath);
 
-                if(strpos($translations, $entityHeader) !== false) {
+                if (strpos($translations, $entityHeader) !== false) {
                     throw new \RuntimeException(sprintf('Unable to generate the %s entity translation as it already exists under the %s file', $this->className, $this->classPath));
                 }
-
-            }
-            else {
-                $translations = $this->render('translations/admin.'.$lang.'.yml.twig',[]);
+            } else {
+                $translations = $this->render('translations/admin.'.$lang.'.yml.twig', []);
             }
 
             if (count($metadata->identifier) > 1) {
@@ -83,7 +81,7 @@ class DoctrineTranslationGenerator extends Generator
             }
 
             // add a trailing \n if not exists
-            if(substr($translations,-1,1) != "\n") {
+            if (substr($translations, -1, 1) != "\n") {
                 $translations .= "\n";
             }
 
@@ -91,15 +89,13 @@ class DoctrineTranslationGenerator extends Generator
             array_pop($parts);
 
             $translations .= $entityHeader;
-            $translations .= str_repeat(" ",8)."entity_name: ".str_replace('_',' ',ucfirst(strtolower($entityClass)))."\n";
+            $translations .= str_repeat(' ', 8).'entity_name: '.str_replace('_', ' ', ucfirst(strtolower($entityClass)))."\n";
 
-            foreach($this->getFieldsFromMetadata($metadata) as $field => $meta ) {
-                $translations .= str_repeat(" ",8).$field.": ".str_replace('_',' ',ucfirst(strtolower($field)))."\n";
+            foreach ($this->getFieldsFromMetadata($metadata) as $field => $meta) {
+                $translations .= str_repeat(' ', 8).$field.': '.str_replace('_', ' ', ucfirst(strtolower($field)))."\n";
             }
 
             file_put_contents($this->classPath, $translations);
         }
-
     }
-
 }

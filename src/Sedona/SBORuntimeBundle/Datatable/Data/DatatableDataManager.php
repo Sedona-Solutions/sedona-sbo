@@ -13,15 +13,12 @@ namespace Sedona\SBORuntimeBundle\Datatable\Data;
 
 use Sg\DatatablesBundle\Datatable\View\DatatableViewInterface;
 use Sg\DatatablesBundle\Datatable\Data\DatatableDataManager as DatatableDataManagerBase;
-
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Serializer;
 
 /**
- * Class DatatableDataManager
- *
- * @package Sg\DatatablesBundle\Datatable\Data
+ * Class DatatableDataManager.
  */
 class DatatableDataManager extends DatatableDataManagerBase
 {
@@ -49,14 +46,14 @@ class DatatableDataManager extends DatatableDataManagerBase
     /**
      * True if the LiipImagineBundle is installed.
      *
-     * @var boolean
+     * @var bool
      */
     private $imagineBundle;
 
     /**
      * True if GedmoDoctrineExtensions installed.
      *
-     * @var boolean
+     * @var bool
      */
     private $doctrineExtensions;
 

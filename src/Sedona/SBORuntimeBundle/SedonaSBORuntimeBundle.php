@@ -14,8 +14,7 @@ namespace Sedona\SBORuntimeBundle;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * Class SedonaSBORuntimeBundle
- * @package Sedona\SBORuntimeBundle
+ * Class SedonaSBORuntimeBundle.
  */
 class SedonaSBORuntimeBundle extends Bundle
 {

@@ -19,8 +19,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
- * Class DatatableDataManager
- * @package Sedona\SBOGeneratorBundle\Datatable\Data
+ * Class DatatableDataManager.
  */
 class DatatableDataManager extends \Sg\DatatablesBundle\Datatable\Data\DatatableDataManager
 {
@@ -51,7 +50,6 @@ class DatatableDataManager extends \Sg\DatatablesBundle\Datatable\Data\Datatable
      * @var ParameterBag
      */
     private $parameterBag;
-
 
     //-------------------------------------------------
     // Ctor.
@@ -84,23 +82,23 @@ class DatatableDataManager extends \Sg\DatatablesBundle\Datatable\Data\Datatable
         $type = $datatableView->getAjax()->getType();
         $entity = $datatableView->getEntity();
 
-        if ("GET" === strtoupper($type)) {
+        if ('GET' === strtoupper($type)) {
             $this->parameterBag = $this->request->query;
         }
 
-        if ("POST" === strtoupper($type)) {
+        if ('POST' === strtoupper($type)) {
             $this->parameterBag = $this->request->request;
         }
 
         $params = $this->parameterBag->all();
 
         /**
-         * @var \Doctrine\ORM\Mapping\ClassMetadata $metadata
+         * @var \Doctrine\ORM\Mapping\ClassMetadata
          */
         $metadata = $this->doctrine->getManager()->getClassMetadata($entity);
 
         /**
-         * @var \Doctrine\ORM\EntityManager $em
+         * @var \Doctrine\ORM\EntityManager
          */
         $em = $this->doctrine->getManager();
 

@@ -18,20 +18,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Class EntitySelect2Type
- * @package Sedona\SBORuntimeBundle\Form\Type
+ * Class EntitySelect2Type.
  */
-class EntitySelect2Type extends EntityTextType {
-
+class EntitySelect2Type extends EntityTextType
+{
     /**
      * @var RouterInterface
      */
     protected $router;
 
     protected $copyProperty = [
-        'placeholder'           => 'placeholder',
-        'minimumInputLength'    => 'data-minimumInputLength',
-        'maximumInputLength'    => 'data-maximumInputLength'
+        'placeholder' => 'placeholder',
+        'minimumInputLength' => 'data-minimumInputLength',
+        'maximumInputLength' => 'data-maximumInputLength',
     ];
 
     /**
@@ -51,15 +50,15 @@ class EntitySelect2Type extends EntityTextType {
         parent::configureOptions($resolver);
         $resolver
             ->setDefaults(array(
-                'attr'  => [
-                    "data-toggle" => 'select2-remote'
+                'attr' => [
+                    'data-toggle' => 'select2-remote',
                 ],
                 'placeholder' => null,          // Initial value that is selected if no other selection is made.
-                'searchRouteParams' => []       // parametre de la route de recherche...
+                'searchRouteParams' => [],       // parametre de la route de recherche...
             ))
             ->setDefined([
                 'minimumInputLength',           // Number of characters necessary to start a search.
-                'maximumInputLength'            // Maximum number of characters that can be entered for an input.
+                'maximumInputLength',            // Maximum number of characters that can be entered for an input.
             ])
             ->setRequired([
                 'class',
@@ -78,32 +77,32 @@ class EntitySelect2Type extends EntityTextType {
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['attr']['autocomplete'] = 'off';
-        if (array_key_exists('searchRouteName',$options)) {
-            $view->vars['attr']['data-source'] = $this->router->generate($options['searchRouteName'], $options['searchRouteParams'])."?property=".$options['property'];
+        if (array_key_exists('searchRouteName', $options)) {
+            $view->vars['attr']['data-source'] = $this->router->generate($options['searchRouteName'], $options['searchRouteParams']).'?property='.$options['property'];
         }
 
         $object = $form->getData();
         if ($object != null && $object instanceof $options['class']) {
             $getterI = 'get'.ucfirst($options['primaryKey']);
             $getterP = 'get'.ucfirst($options['property']);
-            if(method_exists($object, $getterI) && method_exists($object, $getterP)) {
-                $view->vars['attr']['data-initSelection'] = '{"id":"'.$object->$getterI().'","text":"'.str_replace('"','\"',$object->$getterP()).'"}' ;
-            } else if(method_exists($object, $getterI) && method_exists($object, '__toString')) {
-                $view->vars['attr']['data-initSelection'] = '{"id":"'.$object->$getterI().'","text":"'.str_replace('"','\"',''.$object).'"}' ;
+            if (method_exists($object, $getterI) && method_exists($object, $getterP)) {
+                $view->vars['attr']['data-initSelection'] = '{"id":"'.$object->$getterI().'","text":"'.str_replace('"', '\"', $object->$getterP()).'"}';
+            } elseif (method_exists($object, $getterI) && method_exists($object, '__toString')) {
+                $view->vars['attr']['data-initSelection'] = '{"id":"'.$object->$getterI().'","text":"'.str_replace('"', '\"', ''.$object).'"}';
             }
         }
 
-        if (array_key_exists('required',$options) && $options['required'] == false && array_key_exists('placeholder',$options) && empty($options['placeholder'])) {
+        if (array_key_exists('required', $options) && $options['required'] == false && array_key_exists('placeholder', $options) && empty($options['placeholder'])) {
             throw new \Exception('Le placeholder est obligatoire pour pouvoir supprimer la valeur');
         }
 
         foreach ($this->copyProperty as $optionProperty => $attrProperty) {
-            if (array_key_exists($optionProperty,$options)) {
+            if (array_key_exists($optionProperty, $options)) {
                 $view->vars['attr'][$attrProperty] = $options[$optionProperty];
             }
         }
 
-        parent::buildView($view,$form,$options);
+        parent::buildView($view, $form, $options);
     }
 
     /**

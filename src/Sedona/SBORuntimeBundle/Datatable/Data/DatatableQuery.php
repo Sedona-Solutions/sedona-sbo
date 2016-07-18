@@ -17,7 +17,6 @@ use Sg\DatatablesBundle\Datatable\Column\AbstractColumn;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
 use Sg\DatatablesBundle\Datatable\Column\GalleryColumn;
 use Sg\DatatablesBundle\Datatable\Data\DatatableQuery as DatatableQueryBase;
-
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -54,7 +53,7 @@ class DatatableQuery extends DatatableQueryBase
     private $entity;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $individualFiltering;
 
@@ -134,12 +133,12 @@ class DatatableQuery extends DatatableQueryBase
     private $twig;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $imagineBundle;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $doctrineExtensions;
 
@@ -166,9 +165,9 @@ class DatatableQuery extends DatatableQueryBase
      * @param array                  $requestParams
      * @param DatatableViewInterface $datatableView
      * @param array                  $configs
-     * @param \Twig_Environment       $twig
-     * @param boolean                $imagineBundle
-     * @param boolean                $doctrineExtensions
+     * @param \Twig_Environment      $twig
+     * @param bool                   $imagineBundle
+     * @param bool                   $doctrineExtensions
      * @param string                 $locale
      *
      * @throws \Exception
@@ -182,8 +181,7 @@ class DatatableQuery extends DatatableQueryBase
         $imagineBundle,
         $doctrineExtensions,
         $locale
-    )
-    {
+    ) {
         $this->propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()->enableMagicCall()->getPropertyAccessor();
 
         $this->serializer = $serializer;
@@ -260,7 +258,7 @@ class DatatableQuery extends DatatableQueryBase
                             $this->setIdentifierFromAssociation('translations');
 
                             $this->selectColumns['translations'][] = $data;
-                            $this->joins[$this->tableName . '.' . 'translations'] = 'translations';
+                            $this->joins[$this->tableName.'.'.'translations'] = 'translations';
                             $this->addSearchOrderColumn($key, 'translations', $data);
 
                             continue;
@@ -286,7 +284,7 @@ class DatatableQuery extends DatatableQueryBase
                         if (false === array_key_exists($array[0], $this->selectColumns)) {
                             $this->setIdentifierFromAssociation($array[0]);
                         }
-                        $this->joins[$this->tableName . '.' . $array[0]] = $array[0];
+                        $this->joins[$this->tableName.'.'.$array[0]] = $array[0];
 
                         // id association
                         if (false === array_key_exists($select, $this->selectColumns)) {
@@ -302,7 +300,7 @@ class DatatableQuery extends DatatableQueryBase
                         }
 
                         $this->selectColumns[$array[0]][] = $array[1];
-                        $this->joins[$this->tableName . '.' . $array[0]] = $array[0];
+                        $this->joins[$this->tableName.'.'.$array[0]] = $array[0];
                         $this->addSearchOrderColumn($key, $array[0], $array[1]);
                     }
                 }
@@ -310,7 +308,6 @@ class DatatableQuery extends DatatableQueryBase
                 $this->orderColumns[] = null;
                 $this->searchColumns[] = null;
             }
-
         }
 
         return $this;
@@ -488,14 +485,13 @@ class DatatableQuery extends DatatableQueryBase
 
         // global filtering
         if ('' != $globalSearch) {
-
             $orExpr = $qb->expr()->orX();
 
             foreach ($this->columns as $key => $column) {
                 if (true === $this->isSearchColumn($column)) {
                     $searchField = $this->searchColumns[$key];
-                    $orExpr->add($qb->expr()->like($searchField, '?' . $key));
-                    $qb->setParameter($key, '%' . $globalSearch . '%');
+                    $orExpr->add($qb->expr()->like($searchField, '?'.$key));
+                    $qb->setParameter($key, '%'.$globalSearch.'%');
                 }
             }
 
@@ -509,7 +505,6 @@ class DatatableQuery extends DatatableQueryBase
             $i = 100;
 
             foreach ($this->columns as $key => $column) {
-
                 if (true === $this->isSearchColumn($column)) {
                     $searchType = $column->getSearchType();
                     $searchField = $this->searchColumns[$key];
@@ -523,13 +518,13 @@ class DatatableQuery extends DatatableQueryBase
                             $dateEnd->setTime(23, 59, 59);
 
                             $k = $i + 1;
-                            $andExpr->add($qb->expr()->between($searchField, '?' . $i, '?' . $k));
+                            $andExpr->add($qb->expr()->between($searchField, '?'.$i, '?'.$k));
                             $qb->setParameter($i, $dateStart->format('Y-m-d H:i:s'));
                             $qb->setParameter($k, $dateEnd->format('Y-m-d H:i:s'));
                             $i += 2;
                         } else {
                             $andExpr = $this->addCondition($andExpr, $qb, $searchType, $searchField, $searchValue, $i);
-                            $i++;
+                            ++$i;
                         }
                     }
                 }
@@ -551,7 +546,7 @@ class DatatableQuery extends DatatableQueryBase
      * @param string       $searchType
      * @param string       $searchField
      * @param string       $searchValue
-     * @param integer      $i
+     * @param int          $i
      *
      * @return Andx
      */
@@ -559,44 +554,44 @@ class DatatableQuery extends DatatableQueryBase
     {
         switch ($searchType) {
             case 'like':
-                $andExpr->add($pivot->expr()->like($searchField, '?' . $i));
-                $pivot->setParameter($i, '%' . $searchValue . '%');
+                $andExpr->add($pivot->expr()->like($searchField, '?'.$i));
+                $pivot->setParameter($i, '%'.$searchValue.'%');
                 break;
             case 'notLike':
-                $andExpr->add($pivot->expr()->notLike($searchField, '?' . $i));
-                $pivot->setParameter($i, '%' . $searchValue . '%');
+                $andExpr->add($pivot->expr()->notLike($searchField, '?'.$i));
+                $pivot->setParameter($i, '%'.$searchValue.'%');
                 break;
             case 'eq':
-                $andExpr->add($pivot->expr()->eq($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->eq($searchField, '?'.$i));
                 $pivot->setParameter($i, $searchValue);
                 break;
             case 'neq':
-                $andExpr->add($pivot->expr()->neq($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->neq($searchField, '?'.$i));
                 $pivot->setParameter($i, $searchValue);
                 break;
             case 'lt':
-                $andExpr->add($pivot->expr()->lt($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->lt($searchField, '?'.$i));
                 $pivot->setParameter($i, $searchValue);
                 break;
             case 'lte':
-                $andExpr->add($pivot->expr()->lte($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->lte($searchField, '?'.$i));
                 $pivot->setParameter($i, $searchValue);
                 break;
             case 'gt':
-                $andExpr->add($pivot->expr()->gt($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->gt($searchField, '?'.$i));
                 $pivot->setParameter($i, $searchValue);
                 break;
             case 'gte':
-                $andExpr->add($pivot->expr()->gte($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->gte($searchField, '?'.$i));
                 $pivot->setParameter($i, $searchValue);
                 break;
             case 'in':
-                $andExpr->add($pivot->expr()->in($searchField, '?' . $i));
+                $andExpr->add($pivot->expr()->in($searchField, '?'.$i));
                 $pivot->setParameter($i, explode(',', $searchValue));
                 break;
             case 'notIn':
-                $andExpr->add($pivot->expr()->notIn($searchField, '?' . $i));
-                $pivot->setParameter($i, explode(",", $searchValue));
+                $andExpr->add($pivot->expr()->notIn($searchField, '?'.$i));
+                $pivot->setParameter($i, explode(',', $searchValue));
                 break;
             case 'isNull':
                 $andExpr->add($pivot->expr()->isNull($searchField));
@@ -618,10 +613,9 @@ class DatatableQuery extends DatatableQueryBase
     private function setOrderBy()
     {
         if (isset($this->requestParams['order']) && count($this->requestParams['order'])) {
-
             $counter = count($this->requestParams['order']);
 
-            for ($i = 0; $i < $counter; $i++) {
+            for ($i = 0; $i < $counter; ++$i) {
                 $columnIdx = (integer) $this->requestParams['order'][$i]['column'];
                 $requestColumn = $this->requestParams['columns'][$columnIdx];
 
@@ -659,14 +653,14 @@ class DatatableQuery extends DatatableQueryBase
     /**
      * Query results before filtering.
      *
-     * @param integer $rootEntityIdentifier
+     * @param int $rootEntityIdentifier
      *
      * @return int
      */
     private function getCountAllResults($rootEntityIdentifier)
     {
         $qb = $this->em->createQueryBuilder();
-        $qb->select('count(distinct ' . $this->tableName . '.' . $rootEntityIdentifier . ')');
+        $qb->select('count(distinct '.$this->tableName.'.'.$rootEntityIdentifier.')');
         $qb->from($this->entity, $this->tableName);
 
         $this->setLeftJoins($qb);
@@ -678,14 +672,14 @@ class DatatableQuery extends DatatableQueryBase
     /**
      * Query results after filtering.
      *
-     * @param integer $rootEntityIdentifier
+     * @param int $rootEntityIdentifier
      *
      * @return int
      */
     private function getCountFilteredResults($rootEntityIdentifier)
     {
         $qb = $this->em->createQueryBuilder();
-        $qb->select('count(distinct ' . $this->tableName . '.' . $rootEntityIdentifier . ')');
+        $qb->select('count(distinct '.$this->tableName.'.'.$rootEntityIdentifier.')');
         $qb->from($this->entity, $this->tableName);
 
         $this->setLeftJoins($qb);
@@ -699,6 +693,7 @@ class DatatableQuery extends DatatableQueryBase
      * Constructs a Query instance.
      *
      * @return Query
+     *
      * @throws \Exception
      */
     private function execute()
@@ -738,11 +733,11 @@ class DatatableQuery extends DatatableQueryBase
     /**
      * Normalizes an entity path into an array.
      * Each entity of each level will have its id set.
-     * All values are retrieved using a property accessor with magic call activated
+     * All values are retrieved using a property accessor with magic call activated.
      *
-     * @param array $data
+     * @param array  $data
      * @param object $entity Entity to normalize
-     * @param string $path Path to set in the array
+     * @param string $path   Path to set in the array
      *
      * @return array Normalized data
      */
@@ -762,7 +757,6 @@ class DatatableQuery extends DatatableQueryBase
                         $parts[0] => $this->propertyAccessor->getValue($item, $parts[0]),
                     ];
                 }
-
             } else {
                 if (count($data) === 0) {
                     $data = [];
@@ -787,7 +781,7 @@ class DatatableQuery extends DatatableQueryBase
 
     public function getResponse($buildQuery = true)
     {
-        false === $buildQuery ? : $this->buildQuery();
+        false === $buildQuery ?: $this->buildQuery();
 
         $fresults = new Paginator($this->execute(), true);
         $fresults->setUseOutputWalkers(true);
@@ -824,7 +818,7 @@ class DatatableQuery extends DatatableQueryBase
                             'SgDatatablesBundle:Helper:render_image.html.twig',
                             array(
                                 'image_name' => $item[$data],
-                                'path' => $column->getRelativePath()
+                                'path' => $column->getRelativePath(),
                             )
                         );
                     }
@@ -842,8 +836,10 @@ class DatatableQuery extends DatatableQueryBase
                             $item[$fields[0]] = $this->renderImage(null, $column);
                         } else {
                             foreach ($item[$fields[0]] as $image) {
-                                $galleryImages = $galleryImages . $this->renderImage($image[$fields[1]], $column);
-                                if (++$counter == $column->getViewLimit()) break;
+                                $galleryImages = $galleryImages.$this->renderImage($image[$fields[1]], $column);
+                                if (++$counter == $column->getViewLimit()) {
+                                    break;
+                                }
                             }
                             $item[$fields[0]] = $galleryImages;
                         }
@@ -859,7 +855,7 @@ class DatatableQuery extends DatatableQueryBase
         $outputHeader = array(
             'draw' => (int) $this->requestParams['draw'],
             'recordsTotal' => (int) $this->getCountAllResults($this->rootEntityIdentifier),
-            'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier)
+            'recordsFiltered' => (int) $this->getCountFilteredResults($this->rootEntityIdentifier),
         );
 
         $json = $this->serializer->serialize(array_merge($outputHeader, $output), 'json');
@@ -876,16 +872,16 @@ class DatatableQuery extends DatatableQueryBase
     /**
      * Add search/order columns.
      *
-     * @param integer $key
-     * @param string  $columnTableName
-     * @param string  $data
+     * @param int    $key
+     * @param string $columnTableName
+     * @param string $data
      */
     private function addSearchOrderColumn($key, $columnTableName, $data)
     {
         $column = $this->columns[$key];
 
-        true === $column->getOrderable() ? $this->orderColumns[] = $columnTableName . '.' . $data : $this->orderColumns[] = null;
-        true === $column->getSearchable() ? $this->searchColumns[] = $columnTableName . '.' . $data : $this->searchColumns[] = null;
+        true === $column->getOrderable() ? $this->orderColumns[] = $columnTableName.'.'.$data : $this->orderColumns[] = null;
+        true === $column->getSearchable() ? $this->searchColumns[] = $columnTableName.'.'.$data : $this->searchColumns[] = null;
     }
 
     /**
@@ -894,6 +890,7 @@ class DatatableQuery extends DatatableQueryBase
      * @param string $entity
      *
      * @return ClassMetadata
+     *
      * @throws \Exception
      */
     private function getMetadata($entity)
@@ -901,7 +898,7 @@ class DatatableQuery extends DatatableQueryBase
         try {
             $metadata = $this->em->getMetadataFactory()->getMetadataFor($entity);
         } catch (MappingException $e) {
-            throw new \Exception('getMetadata(): Given object ' . $entity . ' is not a Doctrine Entity.');
+            throw new \Exception('getMetadata(): Given object '.$entity.' is not a Doctrine Entity.');
         }
 
         return $metadata;
@@ -938,10 +935,11 @@ class DatatableQuery extends DatatableQueryBase
      *
      * @param string|array       $association
      * @param string             $key
-     * @param integer            $i
+     * @param int                $i
      * @param ClassMetadata|null $metadata
      *
      * @return $this
+     *
      * @throws \Exception
      */
     private function setIdentifierFromAssociation($association, $key = '', $i = 0, $metadata = null)
@@ -965,7 +963,7 @@ class DatatableQuery extends DatatableQueryBase
                 if ($count == $i) {
                     $this->selectColumns[$key][] = $this->getIdentifier($targetMetadata);
                 } else {
-                    $i++;
+                    ++$i;
                     $this->setIdentifierFromAssociation($association, $key, $i, $targetMetadata);
                 }
             }
@@ -1037,14 +1035,14 @@ class DatatableQuery extends DatatableQueryBase
         return $this->twig->render(
             'SgDatatablesBundle:Helper:ii_render_image.html.twig',
             array(
-                'image_id' => 'sg_image_' . uniqid(rand(10000, 99999)),
+                'image_id' => 'sg_image_'.uniqid(rand(10000, 99999)),
                 'image_name' => $imageName,
                 'filter' => $column->getImagineFilter(),
                 'path' => $column->getRelativePath(),
                 'holder_url' => $column->getHolderUrl(),
                 'width' => $column->getHolderWidth(),
                 'height' => $column->getHolderHeight(),
-                'enlarge' => $column->getEnlarge()
+                'enlarge' => $column->getEnlarge(),
             )
         );
     }

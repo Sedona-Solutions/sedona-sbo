@@ -18,22 +18,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
- * Class CollectionSelect2Type
- * @package Sedona\SBORuntimeBundle\Form\Type
+ * Class CollectionSelect2Type.
  */
-class CollectionSelect2Type extends EntityTextType {
-
+class CollectionSelect2Type extends EntityTextType
+{
     /**
      * @var RouterInterface
      */
     protected $router;
 
     protected $copyProperty = [
-        'multiple'              => 'multiple',
-        'placeholder'           => 'placeholder',
-        'minimumInputLength'    => 'data-minimumInputLength',
-        'maximumInputLength'    => 'data-maximumInputLength',
-        'maximumSelectionSize'  => 'data-maximumSelectionSize'
+        'multiple' => 'multiple',
+        'placeholder' => 'placeholder',
+        'minimumInputLength' => 'data-minimumInputLength',
+        'maximumInputLength' => 'data-maximumInputLength',
+        'maximumSelectionSize' => 'data-maximumSelectionSize',
     ];
 
     /**
@@ -54,15 +53,15 @@ class CollectionSelect2Type extends EntityTextType {
         $resolver
             ->setDefaults(array(
                 'multiple' => true,
-                'attr'  => [
-                    "data-toggle" => 'select2-remote'
+                'attr' => [
+                    'data-toggle' => 'select2-remote',
                 ],
-                'placeholder' => null           // Initial value that is selected if no other selection is made.
+                'placeholder' => null,           // Initial value that is selected if no other selection is made.
             ))
             ->setDefined([
                 'minimumInputLength',           // Number of characters necessary to start a search.
                 'maximumInputLength',           // Maximum number of characters that can be entered for an input.
-                'maximumSelectionSize'          //   The maximum number of items that can be selected in a multi-select control. If this number is less than 1 selection is not limited.
+                'maximumSelectionSize',          //   The maximum number of items that can be selected in a multi-select control. If this number is less than 1 selection is not limited.
             ])
             ->setRequired([
                 'class',
@@ -81,32 +80,31 @@ class CollectionSelect2Type extends EntityTextType {
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['attr']['autocomplete'] = 'off';
-        if (array_key_exists('searchRouteName',$options)) {
-            $view->vars['attr']['data-source'] = $this->router->generate($options['searchRouteName'])."?property=".$options['property'];
+        if (array_key_exists('searchRouteName', $options)) {
+            $view->vars['attr']['data-source'] = $this->router->generate($options['searchRouteName']).'?property='.$options['property'];
         }
 
         $collection = $form->getData();
         if ($collection != null && (is_array($collection) || $collection instanceof \Traversable)) {
-
             $getterI = 'get'.ucfirst($options['primaryKey']);
             $getterP = 'get'.ucfirst($options['property']);
             $result = [];
             foreach ($collection as $object) {
-                if($object instanceof $options['class'] && method_exists($object, $getterI) && method_exists($object, $getterP)) {
-                    $result[] = ["id"=>$object->$getterI(),"text"=> $object->$getterP() ];
+                if ($object instanceof $options['class'] && method_exists($object, $getterI) && method_exists($object, $getterP)) {
+                    $result[] = ['id' => $object->$getterI(), 'text' => $object->$getterP()];
                 }
             }
 
-            $view->vars['attr']['data-initSelection'] =  json_encode($result);
+            $view->vars['attr']['data-initSelection'] = json_encode($result);
         }
 
         foreach ($this->copyProperty as $optionProperty => $attrProperty) {
-            if (array_key_exists($optionProperty,$options) && empty($options[$optionProperty]) == false) {
+            if (array_key_exists($optionProperty, $options) && empty($options[$optionProperty]) == false) {
                 $view->vars['attr'][$attrProperty] = $options[$optionProperty];
             }
         }
 
-        parent::buildView($view,$form,$options);
+        parent::buildView($view, $form, $options);
     }
 
     /**

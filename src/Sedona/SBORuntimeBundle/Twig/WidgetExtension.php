@@ -14,8 +14,7 @@ namespace Sedona\SBORuntimeBundle\Twig;
 use Twig_Environment;
 
 /**
- * Class WidgetExtension
- * @package Sedona\SBORuntimeBundle\Twig
+ * Class WidgetExtension.
  */
 class WidgetExtension extends \Twig_Extension
 {
@@ -41,7 +40,6 @@ class WidgetExtension extends \Twig_Extension
 
     public function renderWidget()
     {
-
     }
 
     public function addGlyphicon($text, $icon)
@@ -59,25 +57,27 @@ class WidgetExtension extends \Twig_Extension
             'purify' => new \Twig_SimpleFilter(
                 'purify',
                 array($this, 'purify'),
-                array('is_safe' => array('html')))
+                array('is_safe' => array('html'))),
         );
     }
 
     public function purify($text, $light_mode = false)
     {
         //Version with preg_replace => light mode
-        if($light_mode) {
+        if ($light_mode) {
             //Remove iframe
             $text = preg_replace('/<iframe(.*?)>(.*?)<\/iframe>/is', '', $text);
             //Remove script (js)
             $text = preg_replace('/<script(.*?)>(.*?)<\/script>/is', '', $text);
+
             return $text;
         }
 
         //Version with purifier => heavy mode (by default)
         $config = \HTMLPurifier_Config::createDefault();
-        $config->set("HTML.ForbiddenElements", ['script', 'iframe']);
+        $config->set('HTML.ForbiddenElements', ['script', 'iframe']);
         $purificateur = new \HTMLPurifier($config);
+
         return $purificateur->purify($text);
     }
 

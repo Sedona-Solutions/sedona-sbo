@@ -12,19 +12,16 @@
 namespace Sedona\SBORuntimeBundle\Form\Type;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sedona\SBORuntimeBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class EntityTextType
- * @package Sedona\SBORuntimeBundle\Form\Type
+ * Class EntityTextType.
  */
 class EntityTextType extends TextType
 {
-
     /**
      * @var ObjectManager
      */
@@ -46,7 +43,7 @@ class EntityTextType extends TextType
 
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

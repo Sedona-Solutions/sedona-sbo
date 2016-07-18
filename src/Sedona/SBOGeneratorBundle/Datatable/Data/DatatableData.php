@@ -15,12 +15,10 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class DatatableData
- * @package Sedona\SBOGeneratorBundle\Datatable\Data
+ * Class DatatableData.
  */
 class DatatableData extends \Sg\DatatablesBundle\Datatable\Data\DatatableData
 {
-
     /**
      * Set columns.
      *
@@ -54,8 +52,6 @@ class DatatableData extends \Sg\DatatablesBundle\Datatable\Data\DatatableData
         return $this;
     }
 
-
-
     //-------------------------------------------------
     // DatatableDataInterface
     //-------------------------------------------------
@@ -69,12 +65,12 @@ class DatatableData extends \Sg\DatatablesBundle\Datatable\Data\DatatableData
         $this->buildQuery();
 
         $fresults = new Paginator($this->datatableQuery->execute(), true);
-        $output = array("data" => array());
+        $output = array('data' => array());
 
         $outputHeader = array(
-            "draw" => (integer) $this->requestParams["draw"],
-            "recordsTotal" => (integer) $this->datatableQuery->getCountAllResults($this->rootEntityIdentifier),
-            "recordsFiltered" => (integer) $this->datatableQuery->getCountFilteredResults($this->rootEntityIdentifier)
+            'draw' => (integer) $this->requestParams['draw'],
+            'recordsTotal' => (integer) $this->datatableQuery->getCountAllResults($this->rootEntityIdentifier),
+            'recordsFiltered' => (integer) $this->datatableQuery->getCountFilteredResults($this->rootEntityIdentifier),
         );
 
         foreach ($fresults as $item) {
@@ -83,16 +79,15 @@ class DatatableData extends \Sg\DatatablesBundle\Datatable\Data\DatatableData
                 $item = call_user_func($callable, $item, $outputHeader);
             }
 
-            $output["data"][] = $item;
+            $output['data'][] = $item;
         }
 
         $this->response = array_merge($outputHeader, $output);
 
-        $json = $this->serializer->serialize($this->response, "json");
+        $json = $this->serializer->serialize($this->response, 'json');
         $response = new Response($json);
-        $response->headers->set("Content-Type", "application/json");
+        $response->headers->set('Content-Type', 'application/json');
 
         return $response;
     }
-
 }

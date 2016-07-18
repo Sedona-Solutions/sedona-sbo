@@ -15,8 +15,7 @@ use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class AdminCrudEvent
- * @package Sedona\SBORuntimeBundle\Event
+ * Class AdminCrudEvent.
  */
 class AdminCrudEvent extends Event
 {
@@ -60,6 +59,7 @@ class AdminCrudEvent extends Event
 
     /**
      * @param $action
+     *
      * @return mixed
      */
     public function setAction($action)

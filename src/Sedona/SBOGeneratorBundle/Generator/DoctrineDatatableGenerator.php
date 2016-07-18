@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
  * Generates a datatable class based on a Doctrine entity.
- *
  */
 class DoctrineDatatableGenerator extends Generator
 {
@@ -54,11 +53,11 @@ class DoctrineDatatableGenerator extends Generator
      */
     public function generate(BundleInterface $bundle, $entity, ClassMetadataInfo $metadata, $forceOverwrite)
     {
-        $parts       = explode('\\', $entity);
+        $parts = explode('\\', $entity);
         $entityClass = array_pop($parts);
 
         $this->className = $entityClass.'Datatable';
-        $dirPath         = $bundle->getPath().'/Datatables';
+        $dirPath = $bundle->getPath().'/Datatables';
         $this->classPath = $dirPath.'/'.str_replace('\\', '/', $entity).'Datatable.php';
 
         if (file_exists($this->classPath) && !$forceOverwrite) {
@@ -73,14 +72,14 @@ class DoctrineDatatableGenerator extends Generator
         array_pop($parts);
 
         $params = array(
-            'fields'           => $this->getFieldsFromMetadata($metadata),
-            'namespace'        => $bundle->getNamespace(),
+            'fields' => $this->getFieldsFromMetadata($metadata),
+            'namespace' => $bundle->getNamespace(),
             'entity_namespace' => implode('\\', $parts),
-            'entity_class'     => $entityClass,
-            'entity'           => $entityClass,
-            'bundle'           => $bundle->getName(),
-            'form_class'       => $this->className,
-            'form_type_name'   => strtolower('admin_'.substr($this->className, 0, -4)) //str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.substr($this->className, 0, -4)),
+            'entity_class' => $entityClass,
+            'entity' => $entityClass,
+            'bundle' => $bundle->getName(),
+            'form_class' => $this->className,
+            'form_type_name' => strtolower('admin_'.substr($this->className, 0, -4)), //str_replace('\\', '_', $bundle->getNamespace()).($parts ? '_' : '').implode('_', $parts).'_'.substr($this->className, 0, -4)),
         );
 
         // Generate base generator if not exists
@@ -91,5 +90,4 @@ class DoctrineDatatableGenerator extends Generator
 
         $this->renderFile('datatable/Datatable.php.twig', $this->classPath, $params);
     }
-
 }

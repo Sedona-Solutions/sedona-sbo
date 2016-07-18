@@ -16,8 +16,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Class EntityToIdTransformer
- * @package Sedona\SBORuntimeBundle\Form\DataTransformer
+ * Class EntityToIdTransformer.
  */
 class EntityToIdTransformer implements DataTransformerInterface
 {
@@ -37,7 +36,7 @@ class EntityToIdTransformer implements DataTransformerInterface
     private $primaryKey;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $multiple;
 
@@ -47,11 +46,11 @@ class EntityToIdTransformer implements DataTransformerInterface
     private $glue;
 
     /**
-     * @param \Doctrine\Common\Persistence\ObjectManager    $om
-     * @param string                                        $class Class : 'AcmeTaskBundle:Issue'
-     * @param string                                        $primaryKey Property used as primary key
-     * @param boolean                                       $multiple
-     * @param string                                        $glue
+     * @param \Doctrine\Common\Persistence\ObjectManager $om
+     * @param string                                     $class      Class : 'AcmeTaskBundle:Issue'
+     * @param string                                     $primaryKey Property used as primary key
+     * @param bool                                       $multiple
+     * @param string                                     $glue
      */
     public function __construct(ObjectManager $om, $class, $primaryKey = 'code', $multiple = false, $glue = ',')
     {
@@ -65,7 +64,8 @@ class EntityToIdTransformer implements DataTransformerInterface
     /**
      * Transforms an object (issue) to a string (number).
      *
-     * @param  Object|array|null $item
+     * @param object|array|null $item
+     *
      * @return string
      */
     public function transform($item)
@@ -102,15 +102,16 @@ class EntityToIdTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (issue).
      *
-     * @param  string $number
-     * @return Object|array|null
+     * @param string $number
+     *
+     * @return object|array|null
+     *
      * @throws TransformationFailedException if object (issue) is not found.
      */
     public function reverseTransform($key)
     {
-
         if (!$key) {
-            return null;
+            return;
         }
 
         if ($this->multiple) {
@@ -138,5 +139,4 @@ class EntityToIdTransformer implements DataTransformerInterface
 
         return $item;
     }
-
 }
