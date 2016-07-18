@@ -88,9 +88,9 @@
 
                 {%- if loop.last %}
                 <form role="form">
-                    {{ data|purify }}
+                    {{ data|raw }}
                     <div class="text-center">
-                        {{ button|purify }}
+                        {{ button|raw }}
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -112,8 +112,8 @@
         <div class="box-header">
             <h3 class="box-title">{{ "{{ entity }}" }}</h3>
         </div>
-        <div class="box-body">{{ data|purify }}</div>
-        <div class="box-footer">{{ button|purify }}</div>
+        <div class="box-body">{{ data|raw }}</div>
+        <div class="box-footer">{{ button|raw }}</div>
         </form>
     </div>
     {%- endif %#}
