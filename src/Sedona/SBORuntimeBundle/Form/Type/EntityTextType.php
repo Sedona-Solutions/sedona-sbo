@@ -16,7 +16,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sedona\SBORuntimeBundle\Form\DataTransformer\EntityToIdTransformer;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class EntityTextType
@@ -44,6 +44,10 @@ class EntityTextType extends TextType
         $this->name = $name;
     }
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
@@ -51,9 +55,12 @@ class EntityTextType extends TextType
         $builder->addModelTransformer($transformer);
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
         $resolver->setDefaults(array(
             'primaryKey' => 'id',
             'class' => null,
@@ -62,7 +69,10 @@ class EntityTextType extends TextType
         ));
     }
 
-    public function getName()
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return $this->name;
     }

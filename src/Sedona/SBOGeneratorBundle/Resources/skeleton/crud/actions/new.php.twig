@@ -17,6 +17,6 @@
 {% block method_body %}
 {% endblock method_body %}
 {% block method_return %}
-        return $this->manageNew(new {{ entity }}(), $request, new {{ entity }}Type());
+        return $this->manageNew(new {{ entity }}(), $request, {{ entity }}Type::class);
 {% endblock method_return %}
     }

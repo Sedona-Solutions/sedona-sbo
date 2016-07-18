@@ -15,6 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sedona\SBORuntimeBundle\Event\AdminAssociationActionEvent;
 use Sedona\SBORuntimeBundle\Event\AdminCrudEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,16 +101,16 @@ abstract class BaseCrudController extends Controller
      *
      * @return string|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function manageEdit($entity, Request $request, FormTypeInterface $form)
+    protected function manageEdit($entity, Request $request, $formTypeFQCN)
     {
-        $form = $this->createForm($form, $entity, array(
+        $form = $this->createForm($formTypeFQCN, $entity, array(
             'action' => $this->getEditUrl($entity),
             'method' => 'POST',
         ));
 
         $form
-            ->add('save', 'submit', array('attr' => array('class' => 'btn btn-primary')))
-            ->add('delete', 'submit', array('attr' => array('class' => 'btn btn-danger')));
+            ->add('save', SubmitType::class, array('attr' => array('class' => 'btn btn-primary')))
+            ->add('delete', SubmitType::class, array('attr' => array('class' => 'btn btn-danger')));
 
         $form->handleRequest($request);
 
@@ -139,15 +140,15 @@ abstract class BaseCrudController extends Controller
      *
      * @return string|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    protected function manageNew($entity, Request $request, FormTypeInterface $form)
+    protected function manageNew($entity, Request $request, $formTypeFQCN)
     {
-        $form = $this->createForm($form, $entity, array(
+        $form = $this->createForm($formTypeFQCN, $entity, array(
             'action' => $this->getNewUrl($entity),
             'method' => 'POST',
         ));
 
         $form
-            ->add('create', 'submit', array('attr' => array('class' => 'btn btn-primary')));
+            ->add('create', submitType::class, array('attr' => array('class' => 'btn btn-primary')));
 
         $form->handleRequest($request);
 

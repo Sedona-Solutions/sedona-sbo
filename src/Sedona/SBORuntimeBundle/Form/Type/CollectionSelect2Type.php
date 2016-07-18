@@ -14,7 +14,7 @@ namespace Sedona\SBORuntimeBundle\Form\Type;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -45,9 +45,12 @@ class CollectionSelect2Type extends EntityTextType {
         $this->router = $router;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
         $resolver
             ->setDefaults(array(
                 'multiple' => true,
@@ -56,7 +59,7 @@ class CollectionSelect2Type extends EntityTextType {
                 ],
                 'placeholder' => null           // Initial value that is selected if no other selection is made.
             ))
-            ->setOptional([
+            ->setDefined([
                 'minimumInputLength',           // Number of characters necessary to start a search.
                 'maximumInputLength',           // Maximum number of characters that can be entered for an input.
                 'maximumSelectionSize'          //   The maximum number of items that can be selected in a multi-select control. If this number is less than 1 selection is not limited.
@@ -66,11 +69,9 @@ class CollectionSelect2Type extends EntityTextType {
                 'searchRouteName',              // route de recherche...
                 'property',                     // proprrété sur lr quelle est fait la recheche
             ])
-            ->setAllowedTypes([
-                'class' => ['String'],
-                'searchRouteName' => ['String'],
-                'property' => ['String']
-            ])
+            ->setAllowedTypes('class', ['String'])
+            ->setAllowedTypes('searchRouteName', ['String'])
+            ->setAllowedTypes('property', ['String'])
         ;
     }
 
@@ -111,7 +112,7 @@ class CollectionSelect2Type extends EntityTextType {
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'collection_select2';
     }

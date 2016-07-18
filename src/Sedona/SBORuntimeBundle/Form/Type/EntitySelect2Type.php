@@ -14,7 +14,7 @@ namespace Sedona\SBORuntimeBundle\Form\Type;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -39,13 +39,16 @@ class EntitySelect2Type extends EntityTextType {
      */
     public function __construct(ObjectManager $om, RouterInterface $router)
     {
-        parent::__construct($om, $this->getName());
+        parent::__construct($om, $this->getBlockPrefix());
         $this->router = $router;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
         $resolver
             ->setDefaults(array(
                 'attr'  => [
@@ -54,7 +57,7 @@ class EntitySelect2Type extends EntityTextType {
                 'placeholder' => null,          // Initial value that is selected if no other selection is made.
                 'searchRouteParams' => []       // parametre de la route de recherche...
             ))
-            ->setOptional([
+            ->setDefined([
                 'minimumInputLength',           // Number of characters necessary to start a search.
                 'maximumInputLength'            // Maximum number of characters that can be entered for an input.
             ])
@@ -63,11 +66,9 @@ class EntitySelect2Type extends EntityTextType {
                 'searchRouteName',              // route de recherche...
                 'property',                     // proprrété sur lr quelle est fait la recheche
             ])
-            ->setAllowedTypes([
-                'class' => ['String'],
-                'searchRouteName' => ['String'],
-                'property' => ['String']
-            ])
+            ->setAllowedTypes('class', ['String'])
+            ->setAllowedTypes('searchRouteName', ['String'])
+            ->setAllowedTypes('property', ['String'])
         ;
     }
 
@@ -108,7 +109,7 @@ class EntitySelect2Type extends EntityTextType {
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'entity_select2';
     }

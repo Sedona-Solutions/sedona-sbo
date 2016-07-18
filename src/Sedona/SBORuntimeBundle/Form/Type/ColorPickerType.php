@@ -14,7 +14,7 @@ namespace Sedona\SBORuntimeBundle\Form\Type;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class ColorPickerType
@@ -22,9 +22,12 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  */
 class ColorPickerType extends TextType {
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
     {
-        parent::setDefaultOptions($resolver);
+        parent::configureOptions($resolver);
         $resolver
             ->setDefaults(array(
                 'color-withaddon' => true,
@@ -35,19 +38,13 @@ class ColorPickerType extends TextType {
                 'color-horizontal'=> null,        // If true, the hue and alpha channel bars will be rendered horizontally, above the saturation selector.
                 'color-template'  => null          // Customizes the default colorpicker HTML template.
             ))
-            ->setOptional([
+            ->setDefined([
             ])
             ->setRequired([
                 'color-withaddon'
             ])
-            ->setAllowedValues([
-                'color-format'    => [null,'hex','rgb','rgba'],
-                'color-horizontal'=> [null,true,false]
-            ])
-            ->setAllowedTypes([
-//                'color-withaddon' => ['boolean']
-//                'color-template'  => [null,'string']
-            ])
+            ->setAllowedValues('color-format', [null,'hex','rgb','rgba'])
+            ->setAllowedValues('color-horizontal', [null,true,false])
         ;
     }
 
@@ -72,8 +69,10 @@ class ColorPickerType extends TextType {
         parent::buildView($view,$form,$options);
     }
 
-
-    public function getName()
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
     {
         return 'colorpicker';
     }
