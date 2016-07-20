@@ -27,12 +27,6 @@
             <tag name="form.type" alias="collection_select2" />
         </service>
 
-        <service id="sedona_base.form.type.wysihtml5" class="Sedona\SBORuntimeBundle\Form\Type\Wysihtml5Type">
-            <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="router" />
-            <tag name="form.type" alias="wysihtml5" />
-        </service>
-
         <service id="sedona_base.form.type.colorpicker" class="Sedona\SBORuntimeBundle\Form\Type\ColorPickerType">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="router" />

@@ -40,7 +40,7 @@ class CollectionSelect2Type extends EntityTextType
      */
     public function __construct(ObjectManager $om, RouterInterface $router)
     {
-        parent::__construct($om, $this->getName());
+        parent::__construct($om, $this->getBlockPrefix());
         $this->router = $router;
     }
 

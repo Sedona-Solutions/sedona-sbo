@@ -18,11 +18,6 @@ use Twig_Environment;
  */
 class WidgetExtension extends \Twig_Extension
 {
-    /**
-     * @var Twig_Environment
-     */
-    protected $env;
-
     public function defaultDateFormat()
     {
         return 'DD/MM/YYYY';
@@ -97,11 +92,6 @@ class WidgetExtension extends \Twig_Extension
                 'default_time_format',
                 array($this, 'defaultTimeFormat')),
         );
-    }
-
-    public function initRuntime(Twig_Environment $environment)
-    {
-        $this->env = $environment;
     }
 
     public function getName()

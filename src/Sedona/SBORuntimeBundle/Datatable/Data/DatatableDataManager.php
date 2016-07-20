@@ -92,7 +92,7 @@ class DatatableDataManager extends DatatableDataManagerBase
             $this->imagineBundle = true;
         }
 
-        $this->locale = $this->request->getLocale();
+        $this->locale = $this->request ? $this->request->getLocale() : "en"; // Force default to "en" when no request (ie command line, must be unit test)
     }
 
     //-------------------------------------------------
