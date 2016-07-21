@@ -57,7 +57,7 @@ class DoctrineFormGenerator extends Generator
         $entityClass = array_pop($parts);
 
         $this->className = $entityClass.'Type';
-        $dirPath = $bundle->getPath().'/Form';
+        $dirPath = $bundle->getPath().'/Form/Type';
         $this->classPath = $dirPath.'/Admin/'.str_replace('\\', '/', $entity).'Type.php';
 
         if (file_exists($this->classPath) && !$forceOverwrite) {

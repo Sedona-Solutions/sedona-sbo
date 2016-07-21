@@ -16,7 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use {{ namespace }}\Entity\{{ entity }};
 {% if 'new' in actions or 'edit' in actions %}
-use {{ namespace }}\Form\Admin\{{ entity }}Type;
+use {{ namespace }}\Form\Type\Admin\{{ entity }}Type;
 {% endif %}
 {% set classUses = [ namespace ~'\\Entity\\'~ entity ] %}
 {% for field, metadata in fields if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] and (metadata['targetEntity'] not in classUses) %}
