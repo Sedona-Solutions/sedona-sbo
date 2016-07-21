@@ -27,7 +27,7 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
         //$this->options->set(['individual_filtering' => true]); // Uncomment it to have a search for each field
 
         $actions = [];
-        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_show') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_show')) {
             $actions[] = [
                 'route' => 'admin_{{ entity|lower }}_show',
                 'route_parameters' => array('id' => 'id'),
@@ -42,7 +42,7 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
             ];
         }
 
-        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_edit') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_edit')) {
             $actions[] = [
                 'route' => 'admin_{{ entity|lower }}_edit',
                 'route_parameters' => array('id' => 'id'),
@@ -57,7 +57,7 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
             ];
         }
 
-        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_delete') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ entity|lower }}_delete')) {
             $actions[] = [
                 'route' => 'admin_{{ entity|lower }}_delete',
                 'route_parameters' => array('id' => 'id'),
