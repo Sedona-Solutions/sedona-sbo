@@ -35,7 +35,7 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
         //$this->options->set(['individual_filtering' => true]); // Uncomment it to have a search for each field
 
         $actions = [];
-        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_show') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_show')) {
             $actions[] = [
                 'route' => 'admin_{{ targetClassName|lower }}_show',
                 'route_parameters' => array('id' => 'id'),
@@ -49,7 +49,7 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
                 )
             ];
         }
-        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_edit') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_edit')) {
             $actions[] = [
                 'route' => 'admin_{{ targetClassName|lower }}_edit',
                 'route_parameters' => array('id' => 'id'),
@@ -63,7 +63,7 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
                 )
             ];
         }
-        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_delete') != null) {
+        if ($this->router->getRouteCollection()->get('admin_{{ targetClassName|lower }}_delete')) {
             $actions[] = [
                 'route' => 'admin_{{ entity|lower }}_{{ field|lower }}_remove',
                 'route_parameters' => array('{{ targetClassName|lower }}_id' => 'id', 'id' => '{{ metadata['mappedBy'] is not empty ? metadata['mappedBy'] : metadata['inversedBy'] }}{{  metadata['type'] == constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY') ? '[0]' : '' }}.id' ),
