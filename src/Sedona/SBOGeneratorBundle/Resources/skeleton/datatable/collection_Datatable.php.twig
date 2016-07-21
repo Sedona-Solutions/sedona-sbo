@@ -10,7 +10,8 @@ use Sg\DatatablesBundle\Datatable\View\AbstractDatatableView;
 use Sg\DatatablesBundle\Datatable\View\Style;
 
 /**
- * Class {{ entity }}Datatable
+ * Class {{ entity }}Datatable.
+ *
  * @Service("admin_{{ entity|lower }}_{{ tabname }}_datatable")
  * @Tag("sg.datatable.view")
  */
@@ -45,7 +46,7 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
                     'rel' => 'tooltip',
                     'title' => $this->translator->trans('crud.title.show', [], 'admin'),
                     'class' => 'btn btn-default btn-xs',
-                    'role' => 'button'
+                    'role' => 'button',
                 )
             ];
         }
@@ -59,7 +60,7 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
                     'rel' => 'tooltip',
                     'title' => $this->translator->trans('crud.title.edit', [], 'admin'),
                     'class' => 'btn btn-default btn-xs',
-                    'role' => 'button'
+                    'role' => 'button',
                 )
             ];
         }
@@ -82,13 +83,13 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
                 {% endfor %}#}
             ];
         }
-        if(count($actions)>0) {
+        if (count($actions) > 0) {
             // mappedBy > {{  metadata['mappedBy'] }} | inversedBy > {{  metadata['inversedBy'] }}
             $this->getColumnBuilder()
                 ->add('{{ metadata['mappedBy'] ? metadata['mappedBy'] : metadata['inversedBy'] }}.id','column',['visible' => false])
                 ->add(null, 'action', array(
                     'title' => 'Actions',
-                    'actions' => $actions
+                    'actions' => $actions,
                 ));
         }
 
@@ -105,8 +106,8 @@ class {{ entity }}{{ field|capitalize }}Datatable extends {{ targetClassName }}D
     {% endfor %}#}
 
     /**
-    * {@inheritdoc}
-    */
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return '{{ entity|lower }}_{{ field|lower }}_datatable';

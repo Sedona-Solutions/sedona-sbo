@@ -2,17 +2,17 @@
 
     /**
 {% block phpdoc_method_header %}
-    * search {{ entity }}.
+     * search {{ entity }}.
 {% endblock phpdoc_method_header %}
-    *
+     *
 {% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
-    * @Route("/search{{ field|capitalize }}", name="admin_{{ entity|lower }}_{{ field|lower }}_search", options={"expose"=true})
+     * @Route("/search{{ field|capitalize }}", name="admin_{{ entity|lower }}_{{ field|lower }}_search", options={"expose"=true})
 {% endif %}
 {% endblock phpdoc_method_annotations %}
-    *
-    * @return JsonResponse
-    */
+     *
+     * @return JsonResponse
+     */
 {% block method_definition %}
     public function search{{ field|capitalize }}Action(Request $request)
 {% endblock method_definition %}

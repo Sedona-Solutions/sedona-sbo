@@ -1,15 +1,15 @@
 
     /**
 {% block phpdoc_method_header %}
-    * Edit a {{ entity }}.
+     * Edit a {{ entity }}.
 {% endblock phpdoc_method_header %}
-    *
+     *
 {% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
-    * @Route("/{id}/edit", name="admin_{{ entity|lower }}_edit", options={"expose"=true})
+     * @Route("/{id}/edit", name="admin_{{ entity|lower }}_edit", options={"expose"=true})
 {% endif %}
 {% endblock phpdoc_method_annotations %}
-    */
+     */
 {% block method_definition %}
     public function editAction({{ entity }} $entity, Request $request)
 {% endblock method_definition %}

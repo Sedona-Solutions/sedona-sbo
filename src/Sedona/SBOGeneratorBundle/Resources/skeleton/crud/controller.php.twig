@@ -45,49 +45,32 @@ class {{ entity_class }}Controller extends BaseCrudController
     protected $entity_name = '{{ entity }}';
 {% block class_body %}
     {%- if 'index' in actions %}
-        {%- include 'crud/actions/index.php.twig' %}
+        {%- include 'crud/actions/index.php.twig' -%}
     {%- endif %}
-
     {%- if 'datatable' in actions %}
-        {%- include 'crud/actions/datatable.php.twig' %}
+        {%- include 'crud/actions/datatable.php.twig' -%}
     {%- endif %}
-
     {%- if 'new' in actions %}
-        {%- include 'crud/actions/new.php.twig' %}
+        {%- include 'crud/actions/new.php.twig' -%}
     {%- endif %}
-
     {%- if 'edit' in actions %}
-
         {%- for field, metadata in fields if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE')] %}
-            {%- include 'crud/actions/entity_search.php.twig' %}
+            {%- include 'crud/actions/entity_search.php.twig' -%}
         {% endfor %}
-
-        {%- include 'crud/actions/edit.php.twig' %}
-
+        {%- include 'crud/actions/edit.php.twig' -%}
     {%- endif %}
-
     {%- if 'show' in actions %}
-        {%- include 'crud/actions/show.php.twig' %}
+        {%- include 'crud/actions/show.php.twig' -%}
     {%- endif %}
-
     {%- for field, metadata in fields if metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] %}
-        {%- if 'show' in actions %}
-
+        {%- if 'show' in actions -%}
             {{ renderFile('datatable/collection_Datatable.php.twig', dir ~'/Datatables/'~entity~field|capitalize~'Datatable.php',{'tabname':field,'field': field ,'metadata': metadata }) }}
-
-            {%- include 'crud/actions/collection_index.php.twig' %}
-
-            {%- include 'crud/actions/collection_datatable.php.twig' %}
-
-            {%- include 'crud/actions/collection_search.php.twig' %}
-
-            {% include 'crud/actions/collection_add.php.twig' %}
-
-            {% include 'crud/actions/collection_remove.php.twig' %}
-        {%- endif %}
+            {%- include 'crud/actions/collection_index.php.twig' -%}
+            {%- include 'crud/actions/collection_datatable.php.twig' -%}
+            {%- include 'crud/actions/collection_search.php.twig' -%}
+            {%- include 'crud/actions/collection_add.php.twig' -%}
+            {%- include 'crud/actions/collection_remove.php.twig' -%}
+        {%- endif -%}
     {% endfor %}
-
-
 {% endblock class_body %}
-
 }

@@ -8,7 +8,8 @@ use Sg\DatatablesBundle\Datatable\View\AbstractDatatableView;
 use Sg\DatatablesBundle\Datatable\View\Style;
 
 /**
- * Class {{ entity }}Datatable
+ * Class {{ entity }}Datatable.
+ *
  * @Service("admin_{{ entity|lower }}_datatable")
  * @Tag("sg.datatable.view")
  */
@@ -17,7 +18,7 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
     /**
      * {@inheritdoc}
      */
-    public function buildDatatable(array $options= [])
+    public function buildDatatable(array $options = [])
     {
         $this->setParameters();
         $this->setColumns();
@@ -37,8 +38,8 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
                     'rel' => 'tooltip',
                     'title' => 'Show',
                     'class' => 'btn btn-default btn-xs',
-                    'role' => 'button'
-                )
+                    'role' => 'button',
+                ),
             ];
         }
 
@@ -52,8 +53,8 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
                     'rel' => 'tooltip',
                     'title' => $this->translator->trans('crud.title.edit', [], 'admin'),
                     'class' => 'btn btn-default btn-xs',
-                    'role' => 'button'
-                )
+                    'role' => 'button',
+                ),
             ];
         }
 
@@ -69,21 +70,25 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
                     'class' => 'btn btn-default btn-xs',
                     'role' => 'button',
                     'data-toggle' => 'delete',
-                    'data-confirm' => $this->translator->trans('crud.form.confirm', [], 'admin')
-                )
+                    'data-confirm' => $this->translator->trans('crud.form.confirm', [], 'admin'),
+                ),
             ];
         }
 
-        if(count($actions)>0) {
+        if (count($actions) > 0) {
             $this->getColumnBuilder()
                 ->add(null, 'action', array(
                     'title' => 'Actions',
-                    'actions' => $actions
+                    'actions' => $actions,
                 ));
         }
     }
 
-    protected function setParameters() {
+    /**
+     * {@inheritdoc}
+     */
+    protected function setParameters()
+    {
         $this->features->set([
             'server_side' => true,
             'processing' => true,
@@ -98,8 +103,8 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
     /**
      * {@inheritdoc}
      */
-    protected function setColumns() {
-
+    protected function setColumns()
+    {
         $this->getColumnBuilder()
 {% for field, metadata in fields if metadata.type not in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::ONE_TO_MANY'),constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_MANY')] %}
 {% if metadata.type == 'date' %}
@@ -120,16 +125,16 @@ class {{ entity }}Datatable extends AbstractCrudDatatableView
     }
 
     /**
-    * {@inheritdoc}
-    */
+     * {@inheritdoc}
+     */
     public function getEntity()
     {
         return '{{ bundle }}:{{ entity }}';
     }
 
     /**
-    * {@inheritdoc}
-    */
+     * {@inheritdoc}
+     */
     public function getName()
     {
         return '{{ entity|lower }}_datatable';

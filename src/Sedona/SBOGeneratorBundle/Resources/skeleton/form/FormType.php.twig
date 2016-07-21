@@ -14,10 +14,10 @@ class {{ form_class }} extends AbstractType
 {% endblock class_definition %}
 {
 {% block class_body %}
-    {% if fields|length > 0 %}
+    {%- if fields|length > 0 %}
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -25,11 +25,11 @@ class {{ form_class }} extends AbstractType
         $builder
 {% for field, metadata in fields %}
 {% if metadata.type == 'date' %}
-            ->add("{{ field }}", Type\DateType::class, array('widget' => 'single_text', 'format' => "MM/dd/yyyy"{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
+            ->add('{{ field }}', Type\DateType::class, array('widget' => 'single_text', 'format' => 'MM/dd/yyyy'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
 {% elseif metadata.type == 'datetime' %}
-            ->add("{{ field }}", Type\DateTimeType::class, array('widget' => 'single_text', 'format' => "MM/dd/yyyy HH:mm:ss"{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
+            ->add('{{ field }}', Type\DateTimeType::class, array('widget' => 'single_text', 'format' => 'MM/dd/yyyy HH:mm:ss'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
 {% elseif metadata.type == 'time' %}
-            ->add("{{ field }}", Type\TimeType::class, array('widget' => 'single_text', 'with_seconds' => true{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
+            ->add('{{ field }}', Type\TimeType::class, array('widget' => 'single_text', 'with_seconds' => true{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
 {% elseif metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE')] %}
 {% set property = null  -%}
 {% if method_exists(metadata['targetEntity'] ,'get'~'name'|capitalize ) -%}
@@ -37,7 +37,7 @@ class {{ form_class }} extends AbstractType
 {% elseif method_exists(metadata['targetEntity'] ,'get'~'title'|capitalize ) -%}
 {% set property = 'title'  %}
 {% endif %}
-            ->add("{{ field }}", \Sedona\SBORuntimeBundle\Form\Type\EntitySelect2Type::class, [
+            ->add('{{ field }}', \Sedona\SBORuntimeBundle\Form\Type\EntitySelect2Type::class, [
                    'class'             => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ field|capitalize }}',
                    'searchRouteName'   => 'admin_{{ entity_class|lower }}_{{ field|lower }}_search',
                    'property'          => '{{ property }}',
@@ -51,7 +51,7 @@ class {{ form_class }} extends AbstractType
 {% elseif method_exists(metadata['targetEntity'] ,'get'~'title'|capitalize ) -%}
 {% set property = 'title'  %}
 {% endif %}
-        //   ->add("{{ field }}", \Sedona\SBORuntimeBundle\Form\Type\EntitySelect2Type::class, [
+        //   ->add('{{ field }}', \Sedona\SBORuntimeBundle\Form\Type\EntitySelect2Type::class, [
         //           'class'             => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ field|capitalize }}',
         //           'searchRouteName'   => 'admin_{{ field|lower }}_search',
         //           'property'          => '{{ property }}',
@@ -73,7 +73,7 @@ class {{ form_class }} extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }}'
+            'data_class' => '{{ namespace }}\Entity{{ entity_namespace ? '\\' ~ entity_namespace : '' }}\{{ entity_class }}',
         ));
     }
 

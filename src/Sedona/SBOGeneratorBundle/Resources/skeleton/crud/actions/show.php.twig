@@ -1,16 +1,16 @@
 
     /**
 {% block phpdoc_method_header %}
-    * Show a {{ entity }}.
+     * Show a {{ entity }}.
 {% endblock phpdoc_method_header %}
-    *
+     *
 {% block phpdoc_method_annotations %}
 {% if 'annotation' == format %}
-    * @Route("/{id}", name="admin_{{ entity|lower }}_show", options={"expose"=true})
-    * @Method("GET")
+     * @Route("/{id}", name="admin_{{ entity|lower }}_show", options={"expose"=true})
+     * @Method("GET")
 {% endif %}
 {% endblock phpdoc_method_annotations %}
-    */
+     */
 {% block method_definition %}
     public function showAction({{ entity }} $entity)
 {% endblock method_definition %}
