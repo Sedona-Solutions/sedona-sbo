@@ -49,32 +49,31 @@ class WidgetExtension extends \Twig_Extension
                 'addGlyphicon',
                 array($this, 'addGlyphicon'),
                 array('pre_escape' => 'html', 'is_safe' => array('html'))),
-            'purify' => new \Twig_SimpleFilter(
-                'purify',
-                array($this, 'purify'),
+            'purifyLight' => new \Twig_SimpleFilter(
+                'purifyLight',
+                array($this, 'purifyLight'),
                 array('is_safe' => array('html'))),
         );
     }
 
-    public function purify($text, $light_mode = false)
+    public function purifyLight($text, $light_mode = false)
     {
-        //Version with preg_replace => light mode
-        if ($light_mode) {
-            //Remove iframe
-            $text = preg_replace('/<iframe(.*?)>(.*?)<\/iframe>/is', '', $text);
-            //Remove script (js)
-            $text = preg_replace('/<script(.*?)>(.*?)<\/script>/is', '', $text);
 
-            return $text;
-        }
+//        <p>bio :) avec une <strong>iframe </strong>:</p>
+//        <p><iframe src="http://www.sedona.fr"></iframe></p><p> et du JS : <script language="javascript">alert("hello");</script></p>
 
-        //Version with purifier => heavy mode (by default)
-        $config = \HTMLPurifier_Config::createDefault();
-        $config->set('HTML.ForbiddenElements', ['script', 'iframe']);
-        $purificateur = new \HTMLPurifier($config);
 
-        return $purificateur->purify($text);
+    //Remove iframe
+        $text = preg_replace('/<\s*iframe(.*)>(.*)<\/iframe\s*>/isU', '', $text);
+
+        $text = preg_replace('/<\s*iframe(.*)(\/?)>/isU', '', $text);
+
+        //Remove script (js)
+        $text = preg_replace('/<script(.*?)>(.*?)<\/script>/isU', '', $text);
+
+        return $text;
     }
+
 
     public function getFunctions()
     {

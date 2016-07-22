@@ -47,6 +47,7 @@ class AppKernel extends Kernel
 
              new Sg\DatatablesBundle\SgDatatablesBundle(),
              new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),
+             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
 
              new Sedona\SBORuntimeBundle\SedonaSBORuntimeBundle(),
         );
