@@ -519,10 +519,9 @@
 
     /** ---------------------------- form sending by ajax ---------------------- **/
     $(document)
-        /* -- sur le clique d'un bouton, changement de label ------------------------------------------------------- */
         .on('submit','form[data-toggle="ajax-submit"]',function(e) {
-            // j'empecher l'envoie du formulaire car je dois pas�e par les requette Ajax.
-            // elle font un return true pour laisser l'execution de tous les differants scripts...
+            // Empêche l'envoi du formulaire car je dois passer par les requêtes Ajax.
+            // elle font un return true pour laisser l'execution de tous les différents scripts...
             return false;
         })
         .on('submit click','form[data-toggle="ajax-submit"] :submit',function(e) {
@@ -541,27 +540,34 @@
                 }
             });
 
-
             if($form.find('.form-error').size() > 0) {
                 window.setTimeout(function(){
                     $button.button('reset');
                 },0);
             }
 
+            var data = $form.serializeArray();
+            data.push( {'name': $(this).attr('name')} );
+
             $form.ajaxSubmit({
                 url: url,
+                data: data,
                 type: "POST",
                 success: function(html){
-
                     if (html == '') { // ok
                         window.location.reload();
+                    } else if(html.redirect != undefined) {
+                        $(location).attr('href', html.redirect);
                     } else {
                         $content.html(html);
                         $(document).trigger('sonata-admin-append-form-element');
                     }
                 },
-                error: function (ajaxContext) {
-                    alert(ajaxContext.responseText)
+                error: function (response,status,xhr) {
+                    console.log('response', response);
+                    console.log('status', status);
+                    console.log('xhr', xhr);
+                    alert(response.responseText)
                 }
             });
         })
@@ -593,6 +599,100 @@
             $prototype.append(newWidget);
             $this.data('count',prototypeCount);
             $(document).trigger('sonata-admin-append-form-element');
+        })
+    ;
+
+    /** ---------------------------- load and replace ---------------------- **/
+    $.fn.loadAndReplace = function (url) {
+        var $this = $(this),
+            callback = arguments.length > 1 ? arguments[1] : null;
+
+        if ($this.data('loadAndReplace') !== undefined &&
+            $this.data('loadAndReplace') == true) {
+            // precessuse déja en cours
+            return false;
+        }
+
+        $this
+            .data('loadAndReplace', true)
+            .load(url, function (response, status, xhr) {
+                var $this = $(this);
+
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: ";
+                    $this.htmlPolyfill(
+                        '<div class="alert alert-danger alert-dismissable"><a href="'
+                        + url + '" data-toggle="loadAndReplace" data-target="'
+                        + $this.selector + '" class="close">×</a> '
+                        + msg + xhr.status + " " + xhr.statusText + '</div>'
+                        + response
+                    );
+                }
+                if (callback != null) {
+                    callback.apply(this, [url, response, status]);
+                }
+                $this.data('loadAndReplace', false);
+                $(document).trigger('sonata-admin-append-form-element');
+            })
+        ;
+    };
+
+    $.fn.loadAndReplaceSusciber = function () {
+
+        var arg = arguments,
+            pfunction = function () {
+                var $button = $(this),
+                    loadurl = $button.is('a') ? $button.attr('href') : $button.data('href'),
+                    target = $button.data('target'),
+                    $targ = $(target);
+
+                if ($targ.size() == 0) {
+                    return false;
+                }
+
+                $targ.loadAndReplace(loadurl);
+                return false;
+            };
+
+        if (arguments.length > 0 && arguments[0] == "click") {
+            pfunction.apply(this);
+        }
+        this.each(function (i, el) {
+            var $el = $(el);
+
+            // on a déjà un ecouter sur cette element, pas besaoin d'en rajouter un
+            if ($el.data('loadAndReplaceSusciber') != undefined) {
+                return false;
+            }
+
+            $el
+                .data('loadAndReplaceSusciber', true)
+                .on('click', function (e) {
+                    pfunction.apply(this);
+                    return false;
+                })
+            ;
+        });
+    };
+
+    $(document)
+        .on('change', 'select:has([data-toggle="loadAndReplace"])', function (e) {
+            var $so = $($(this).get(0).selectedOptions);
+            window.setTimeout(function () {
+                $so.loadAndReplaceSusciber('click');
+            }, 0);
+        })
+        .on('click', '[data-toggle="loadAndReplace"]', function (e) {
+            alert('ok');
+            var $this = $(this);
+            if ($this.data('loadAndReplace') !== undefined)
+                return;
+            e.preventDefault();
+
+            $this.loadAndReplaceSusciber('click');
+        })
+        .on('ready loaded.bs.modal sonata-admin-append-form-element', function () {
+            $('[data-toggle="loadAndReplace"]').loadAndReplaceSusciber();
         })
     ;
 
