@@ -21,7 +21,7 @@
             var $this = $(this);
             if ($this.data('ionRangeSlider') != undefined) {
                 return;
-            } else if('ionRangeSlider' in $.fn == false) {
+            } else if ('ionRangeSlider' in $.fn == false) {
                 console.error("ionRangeSlider lib is missing, the js & css must be included");
                 return;
             }
@@ -30,7 +30,7 @@
             $this.ionRangeSlider();
         })
         .on('ready loaded.bs.modal',function(){
-            if('ionRangeSlider' in $.fn) {
+            if ('ionRangeSlider' in $.fn) {
                 $('[data-toggle=ionrangeslider]').ionRangeSlider();
             }
         })
@@ -39,10 +39,10 @@
             var $this = $(this);
             if ($this.data('daterangepicker') != undefined) {
                 return;
-            } else if(('daterangepicker' in $.fn) == false) {
+            } else if (('daterangepicker' in $.fn) == false) {
                 console.error("daterangepicker lib is missing, the js must be included");
                 return;
-            } else if('moment' in window == false) {
+            } else if ('moment' in window == false) {
                 console.error("moment lib is missing, the js must be included");
                 return;
             }
@@ -82,7 +82,7 @@
             $this.colorpicker($this.data('data-colorpicker-init'));
         })
         .on('ready loaded.bs.modal',function(){
-            if('colorpicker' in $.fn) {
+            if ('colorpicker' in $.fn) {
                 $('[data-colorpicker-init]').each(function (i, el) {
                     var $this = $(this);
                     $this.colorpicker($this.data('data-colorpicker-init'));
@@ -142,7 +142,7 @@
         .on('click', "[data-toggle=pill],[data-toggle=tab]",function (event) {
             /* Update hash based on tab */
             var url = $(this).attr("href").split('#');
-            if(url[1] != undefined) {
+            if (url[1] != undefined) {
                 event.preventDefault();
                 $('[data-toggle="tab"][href=#' + url[1] + ']').tab('show');
             } else {
@@ -153,7 +153,7 @@
         .on('ready', function(){
             /* Automagically jump on good tab based on anchor */
             var url = document.location.href.split('#');
-            if(url[1] != undefined) {
+            if (url[1] != undefined) {
                 $('[data-toggle="tab"][href=#'+url[1]+']').tab('show');
                 $('[data-toggle="tabajax"][data-target=#'+url[1]+']').click();
             }
@@ -163,11 +163,11 @@
     /* -------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Supprime un contenu de la page si la réponse de la requette est positive
-     * <* href="lien vers fonction de suppersion"   Obligatoire si le tag n'est un 'a'    >
-     *          data-target="lien vers ..."         Obligatoire si le tag n'est pas un 'a' >
-     *          data-toggle="delete"                Obligatoire >
-     *          data-parent="tr"                    Optionnel   > selecteur du parants a Supprime, par défaut cherche le parent tr
+     * Delete content element if request is valid
+     * <* href="script's url to deletion "          Mandatory if current object is a link 'a'
+     *          data-target="lien vers ..."         Mandatory if current object isn't a link > for button...
+     *          data-toggle="delete"                Mandatory > detect object
+     *          data-parent="tr"                    Optional  > target parent selector, by default tr parent
      *      />blabla</*>
      */
     $(document).on(
@@ -187,7 +187,7 @@
                     },
                     'success': function (data) {
                         if (data.result) {
-                            // on test pour voir si on a pas affire a un datatable
+                            // check if not a datatable
                             if ($cible.is('tr') && $.fn.dataTable.isDataTable($cible.parents('table:first'))) {
                                 $($cible.parents('table:first')).DataTable()
                                     .row($cible)
@@ -213,21 +213,21 @@
     /* -------------------------------------------------------------------------------------------------------------- */
 
     /**
-     * Active le plugin Select2 http://ivaynberg.github.io/select2/
-     * <select  data-toggle="select2"               Obligatoire >
-     *          data-source="lien vers ..."         Optionnel   > url de la fonction pour faire de l'autocompletion, le résultat attendu est  {'results':[],'more':true|false,'message':null|text}
-     *          data-target="table"                 Optionnel   > selecteur dans lequelle sera ajouter le contenu html de la propriété de "html" du result séléctionée
-     *          data-minimumInputLength=""          Optionnel   >
-     *          data-maximumInputLength=""          Optionnel   >
+     * Enable select2 plugin http://ivaynberg.github.io/select2/
+     * <select  data-toggle="select2"               Mandatory  > detect element
+     *          data-source="lien vers ..."         Optional   > source url for autocompletion script, wait syntaxe {'results':[],'more':true|false,'message':null|text}
+     *          data-target="table"                 Optional   > target selector used to display html result if exist
+     *          data-minimumInputLength=""          Optional   >
+     *          data-maximumInputLength=""          Optional   >
      *
-     *          data-initselection=""               Optionnel   > A utiliser avec les formulaire Symfony , definit les valeurs au chargement de la page
-     *          required="required"                 Optionnel   > A utiliser dans les relation ManyToOne avec le type de formulaire Symfony "entity_select2"
-     *          multiple="*"                        Optionnel   > A utiliser dans les relation OneToMany avec le type de formulaire Symfony "collection_select2"
-     *          data-maximumSelectionSize=""        Optionnel   > A utiliser dans les relation OneToMany avec le type de formulaire Symfony "collection_select2"
+     *          data-initselection=""               Optional   > To use with Symfony to define starting values
+     *          required="required"                 Optional   > To use with ManyToOne relation with Symfony form type "entity_select2"
+     *          multiple="*"                        Optional   > To use with OneToMany relation with Symfony form type "collection_select2"
+     *          data-maximumSelectionSize=""        Optional   > To use with OneToMany relation with Symfony form type "collection_select2"
      *
      *      /></select>                                           et/ou le contenu de la propriété de "html" de la requette ajax effectée a partir de la propriété de "confirme" du result séléctionée
      *
-     * Exemple de response pour :
+     * Exemple of response for :
      * data-source               > {'results':[],'more':true|false,'message':null|text}
      * data-source + data-target > {'results':[],'more':true|false,'message':null|text,'html':'text html'}
      * data-source + data-target >{'results':[],'more':true|false,'message':null|text,'confirme': 'url de recu pour charger le contenu'} puis sur confirme {'result':true|false,'message':null|text,'html':'text html'}
@@ -260,7 +260,7 @@
                     return $row;
                 }
                 ;
-            for(var $prop in {'minimumInputLength':0,'maximumInputLength':0,'maximumSelectionSize':0}) {
+            for (var $prop in {'minimumInputLength':0,'maximumInputLength':0,'maximumSelectionSize':0}) {
                 if ($this.data($prop.toLocaleLowerCase()) != undefined) {
                     param[$prop] = $this.data($prop.toLocaleLowerCase());
                 }
@@ -274,7 +274,7 @@
             }
 
             if ($this.data('source') != undefined) {
-                // si on a du remote, on recupere les données
+                // define action ajax url
                 param['ajax'] = {
                     url: function(){ return $this.data('source'); },
                     dataType: 'jsonp',
@@ -331,7 +331,7 @@
 
             $this.select2(param);
 
-            // si il y a un target , c'est que l'on doit ajouter quelque chose
+            // if target is defined, need to add a change listener
             if ($this.data('target') != undefined) {
 
                 $this.on('change',function(e) {
@@ -339,11 +339,11 @@
                         var $target = $($this.data('target')),
                             $row = null;
 
-                        // on a du contenu dans la reponse, donc on l'ajoute...
+                        // add content returned
                         if ('html' in e.added) {
                             $row = appendData($target, e.added.html);
                         }
-                        // il y a une confirmation d'ajoute, on l'execute...
+                        // if confirm function is defined, need to execute
                         if ('confirme' in e.added) {
                             if ($row!=null) {
                                 $row.addClass('loading');
@@ -351,7 +351,7 @@
                             $.ajax({
                                 'url': e.added.confirme,
                                 'success' : function (data) {
-                                    if(data.result) {
+                                    if (data.result) {
                                         $row = appendData($target, data.html, $row);
                                     } else {
                                         alert(data.message);
@@ -390,12 +390,12 @@
 
 
     /**
-     * Masque ou affiche cette elements en fonction de la présenece dans la page d'un selecteur
+     * Hide or show elements of selector defined in data-target
      * <input type="button"
-     *          data-toggle="hide-if-no-found"      Obligatoire > hide ou show en fonction du besoin
-     *          data-spy=":radio"                   Obligatoire > elements sur lequelles seront déclachée la verification d'affichage
-     *          data-target=":radio:checked"        Obligatoire > selecteur pour lequelle on va verifié
-     *          data-parent="tr"                    Optionnel   > selecteur du parants a affichée ou masqée si ce n'est pas cette elements, par défaut c'est l'element de base
+     *          data-toggle="hide-if-no-found"      Mandatory > hide or show, disable or enable, visible
+     *          data-spy=":radio"                   Mandatory > element listener (listen this element to execute function
+     *          data-target=":radio:checked"        Mandatory > check this selector to execute function
+     *          data-parent="tr"                    Optional  > target selector, by default current object
      *      />
      */
     $.fn.ifNoFound = function() {
@@ -411,7 +411,7 @@
 
                 'test' : function() {
                     $.each(object.testFunction,function(attrName,fn){
-                        if($this.is('[data-toggle^="'+attrName+'"]')) {
+                        if ($this.is('[data-toggle^="'+attrName+'"]')) {
                             fn();
                         }
                     });
@@ -419,12 +419,6 @@
 
                 'testFunction' : {
                     'hide-if-no-found' : function() {
-                        //console.log("hide-if-no-found",
-                        //    $this.attr('data-target'),
-                        //    object.find(),
-                        //    object.$cible,
-                        //    object.$cible.filter(':visible')
-                        //);
                         if (object.find()) {
                             object.$cible.filter(':visible').stop().slideUp();
                         } else {
@@ -453,7 +447,6 @@
                         }
                     },
                     "visible-if-no-found" : function() {
-                        //console.log('visible-if-no-found',object.$cible,object.find());
                         if (object.find()) {
                             object.$cible.css('visibility','visible');
                         } else {
@@ -464,7 +457,7 @@
 
                 'openModal': function(event) {
                     event.stopPropagation();
-                    if(true) { // désactiver , a modifier + trad {$this.parents('form').checkValidity()) {
+                    if (true) { // disable, to update + trad {$this.parents('form').checkValidity()) {
                         var op = {'show':true};
                         if ($this.is('[href]')) {
                             op['remote'] = $this.attr('href');
@@ -481,7 +474,7 @@
                                 .attr('data-original-title','mandatory')
                                 .tooltip({'template': '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title">'+( node.validationMessage || 'This field is mandatory!')+'</h3><div class="popover-content"></div></div>'})
                                 .tooltip('show');
-                            if(index == 0) {
+                            if (index == 0) {
                                 $('html,body').animate({scrollTop: $(node).offset().top-250}, 'slow');
                             }
                         });
@@ -519,10 +512,9 @@
 
     /** ---------------------------- form sending by ajax ---------------------- **/
     $(document)
-        /* -- sur le clique d'un bouton, changement de label ------------------------------------------------------- */
         .on('submit','form[data-toggle="ajax-submit"]',function(e) {
-            // j'empecher l'envoie du formulaire car je dois pas�e par les requette Ajax.
-            // elle font un return true pour laisser l'execution de tous les differants scripts...
+            // Block form sending because form is in ajax.
+            // Allows to execute another scripts...
             return false;
         })
         .on('submit click','form[data-toggle="ajax-submit"] :submit',function(e) {
@@ -536,32 +528,39 @@
             $form.find('.form-error').removeClass('form-error');
             $form.find('[required]').each(function(){
                 var $this = $(this);
-                if($this.val() == null || $this.val() == ""){
+                if ($this.val() == null || $this.val() == ""){
                     $this.addClass('form-error');
                 }
             });
 
-
-            if($form.find('.form-error').size() > 0) {
+            if ($form.find('.form-error').size() > 0) {
                 window.setTimeout(function(){
                     $button.button('reset');
                 },0);
             }
 
+            var data = $form.serializeArray();
+            data.push( {'name': $(this).attr('name')} );
+
             $form.ajaxSubmit({
                 url: url,
+                data: data,
                 type: "POST",
                 success: function(html){
-
                     if (html == '') { // ok
                         window.location.reload();
+                    } else if (html.redirect != undefined) {
+                        $(location).attr('href', html.redirect);
                     } else {
                         $content.html(html);
                         $(document).trigger('sonata-admin-append-form-element');
                     }
                 },
-                error: function (ajaxContext) {
-                    alert(ajaxContext.responseText)
+                error: function (response,status,xhr) {
+                    console.log('response', response);
+                    console.log('status', status);
+                    console.log('xhr', xhr);
+                    alert(response.responseText)
                 }
             });
         })
@@ -593,6 +592,100 @@
             $prototype.append(newWidget);
             $this.data('count',prototypeCount);
             $(document).trigger('sonata-admin-append-form-element');
+        })
+    ;
+
+    /** ---------------------------- load and replace ---------------------- **/
+    $.fn.loadAndReplace = function (url) {
+        var $this = $(this),
+            callback = arguments.length > 1 ? arguments[1] : null;
+
+        if ($this.data('loadAndReplace') !== undefined &&
+            $this.data('loadAndReplace') == true) {
+            // processus in process
+            return false;
+        }
+
+        $this
+            .data('loadAndReplace', true)
+            .load(url, function (response, status, xhr) {
+                var $this = $(this);
+
+                if (status == "error") {
+                    var msg = "Sorry but there was an error: ";
+                    $this.htmlPolyfill(
+                        '<div class="alert alert-danger alert-dismissable"><a href="'
+                        + url + '" data-toggle="loadAndReplace" data-target="'
+                        + $this.selector + '" class="close">×</a> '
+                        + msg + xhr.status + " " + xhr.statusText + '</div>'
+                        + response
+                    );
+                }
+                if (callback != null) {
+                    callback.apply(this, [url, response, status]);
+                }
+                $this.data('loadAndReplace', false);
+                $(document).trigger('sonata-admin-append-form-element');
+            })
+        ;
+    };
+
+    $.fn.loadAndReplaceSusciber = function () {
+
+        var arg = arguments,
+            pfunction = function () {
+                var $button = $(this),
+                    loadurl = $button.is('a') ? $button.attr('href') : $button.data('href'),
+                    target = $button.data('target'),
+                    $targ = $(target);
+
+                if ($targ.size() == 0) {
+                    return false;
+                }
+
+                $targ.loadAndReplace(loadurl);
+                return false;
+            };
+
+        if (arguments.length > 0 && arguments[0] == "click") {
+            pfunction.apply(this);
+        }
+        this.each(function (i, el) {
+            var $el = $(el);
+
+            // if a listener is already declared, don't need to declare another
+            if ($el.data('loadAndReplaceSusciber') != undefined) {
+                return false;
+            }
+
+            $el
+                .data('loadAndReplaceSusciber', true)
+                .on('click', function (e) {
+                    pfunction.apply(this);
+                    return false;
+                })
+            ;
+        });
+    };
+
+    $(document)
+        .on('change', 'select:has([data-toggle="loadAndReplace"])', function (e) {
+            var $so = $($(this).get(0).selectedOptions);
+            window.setTimeout(function () {
+                $so.loadAndReplaceSusciber('click');
+            }, 0);
+        })
+        .on('click', '[data-toggle="loadAndReplace"]', function (e) {
+            alert('ok');
+            var $this = $(this);
+            if ($this.data('loadAndReplace') !== undefined)
+                return;
+            e.preventDefault();
+
+            $this.loadAndReplaceSusciber('click');
+        })
+        .on('ready loaded.bs.modal sonata-admin-append-form-element', function () {
+            $('[data-toggle="loadAndReplace"]').loadAndReplaceSusciber();
         })
     ;
 

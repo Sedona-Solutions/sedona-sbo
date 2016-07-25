@@ -43,9 +43,7 @@
         'assets/form/jquery.form.js',
         'bundles/fosjsrouting/js/router.js',
         'assets/moment/min/moment.min.js',
-        'assets/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
         'assets/select2/select2.js',
-        'bundles/sedonasboruntime/js/SBOExtra.js'
         ] %}
             <script type="text/javascript" src="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}"></script>
     {% endfor %}
@@ -54,11 +52,18 @@
     {%if app.request.getLocale() != 'en' %}
         {% for asset_url in [
             'assets/moment/locale/'~app.request.getLocale()~'.js',
-            'assets/select2/select2_locale_'~app.request.getLocale()~'.js'
+            'assets/select2/select2_locale_'~app.request.getLocale()~'.js',
             ] %}
                 <script type="text/javascript" src="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}"></script>
         {% endfor %}
     {% endif %}
+
+    {% for asset_url in [
+        'assets/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js',
+        'bundles/sedonasboruntime/js/SBOExtra.js',
+        ] %}
+            <script type="text/javascript" src="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}"></script>
+    {% endfor %}
 {% endblock %}
 
 {% block avanzu_admin_footer %}
