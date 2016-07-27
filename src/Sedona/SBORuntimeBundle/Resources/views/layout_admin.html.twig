@@ -5,6 +5,7 @@
     {% for asset_url in [
         'assets/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
         'assets/select2/select2.css',
+        'bundles/sedonasboruntime/css/SBOExtra.css',
         ] %}
             <link rel="stylesheet" href="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}" type="text/css"/>
     {% endfor %}

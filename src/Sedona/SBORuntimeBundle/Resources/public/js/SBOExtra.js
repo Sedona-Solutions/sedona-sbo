@@ -544,7 +544,7 @@
             data.push( {'name': $(this).attr('name')} );
 
             if($(document).find($waiting)) {
-                $form.prepend($waiting.show());
+                $form.css('position', 'relative').prepend($waiting.show());
             }
 
             $form.ajaxSubmit({
