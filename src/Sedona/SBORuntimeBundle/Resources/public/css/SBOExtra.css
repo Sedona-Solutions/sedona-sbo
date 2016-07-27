@@ -1,0 +1,18 @@
+#overlay_waiting {
+    display: none;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    opacity: 0.8;
+}
+#overlay_waiting > .fa {
+    color: #000;
+    font-size: 100px;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+    position: absolute;
+    top: 50%;
+}
