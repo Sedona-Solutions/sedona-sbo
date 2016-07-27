@@ -20,6 +20,7 @@
 {% endblock title %}
 
 {% block page_content %}
+    {% include 'AppBundle:Form:layout_waiting.html.twig' %}
     {% for label, flashes in app.session.flashbag.all %}
         {% for flash in flashes %}
             <div class="alert alert-{{ label }}">
