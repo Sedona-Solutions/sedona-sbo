@@ -5,6 +5,7 @@
     {% for asset_url in [
         'assets/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
         'assets/select2/select2.css',
+        'bundles/sedonasboruntime/css/SBOExtra.css',
         ] %}
             <link rel="stylesheet" href="{% set rep = asset_url|split('/')|first %}{{ asset(rep)~asset_url[rep|length:] }}" type="text/css"/>
     {% endfor %}
@@ -20,6 +21,7 @@
 {% endblock title %}
 
 {% block page_content %}
+    {% include 'SedonaSBORuntimeBundle:layout:layout_waiting.html.twig' %}
     {% for label, flashes in app.session.flashbag.all %}
         {% for flash in flashes %}
             <div class="alert alert-{{ label }}">

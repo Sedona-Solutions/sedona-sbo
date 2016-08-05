@@ -17,7 +17,7 @@
     });
 
     $(document)
-    // -- ionRangeSlider ------------------------------------------------------------------------------------------
+        // -- ionRangeSlider ------------------------------------------------------------------------------------------
         .on('focus click','[data-toggle=ionrangeslider]', function(){
             var $this = $(this);
             if ($this.data('ionRangeSlider') != undefined) {
@@ -521,7 +521,8 @@
         .on('submit click','form[data-toggle="ajax-submit"] :submit',function(e) {
             var $button = $(this),
                 $form = $button.parents('form:first'),
-                $content = $form.data('target') != undefined ? $($form.data('target')) : $form;
+                $content = $form.data('target') != undefined ? $($form.data('target')) : $form.parent(),
+                $waiting = $('#overlay_waiting').clone();
 
             e.preventDefault();
             var url = $button.attr('formaction') ? $button.attr('formaction') : $form.attr('action');
@@ -540,8 +541,12 @@
                 },0);
             }
 
-            var data = $form.serializeArray();
+            var data = [];
             data.push( {'name': $(this).attr('name')} );
+
+            if($(document).find($waiting)) {
+                $form.css('position', 'relative').prepend($waiting.show());
+            }
 
             $form.ajaxSubmit({
                 url: url,
@@ -677,7 +682,6 @@
             }, 0);
         })
         .on('click', '[data-toggle="loadAndReplace"]', function (e) {
-            alert('ok');
             var $this = $(this);
             if ($this.data('loadAndReplace') !== undefined)
                 return;
