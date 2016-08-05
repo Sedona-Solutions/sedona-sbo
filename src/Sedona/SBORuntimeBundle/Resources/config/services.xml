@@ -6,31 +6,46 @@
 
     <services>
 
-        <service id="sedona_sbo_runtime.widget_extension" class="Sedona\SBORuntimeBundle\Twig\WidgetExtension">
+        <service id="sedona_sbo.widget_extension" class="Sedona\SBORuntimeBundle\Twig\WidgetExtension">
             <tag name="twig.extension"/>
         </service>
 
-        <service id="sedona_base.form.type.entity_text" class="Sedona\SBORuntimeBundle\Form\Type\EntityTextType">
+        <service id="sedona_sbo.form.type.entity_text" class="Sedona\SBORuntimeBundle\Form\Type\EntityTextType">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <tag name="form.type" alias="entity_text" />
         </service>
 
-        <service id="sedona_base.form.type.entity_select2" class="Sedona\SBORuntimeBundle\Form\Type\EntitySelect2Type">
+        <service id="sedona_sbo.form.type.entity_select2" class="Sedona\SBORuntimeBundle\Form\Type\EntitySelect2Type">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="router" />
             <tag name="form.type" alias="entity_select2" />
         </service>
 
-        <service id="sedona_base.form.type.collection_select2" class="Sedona\SBORuntimeBundle\Form\Type\CollectionSelect2Type">
+        <service id="sedona_sbo.form.type.collection_select2" class="Sedona\SBORuntimeBundle\Form\Type\CollectionSelect2Type">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="router" />
             <tag name="form.type" alias="collection_select2" />
         </service>
 
-        <service id="sedona_base.form.type.colorpicker" class="Sedona\SBORuntimeBundle\Form\Type\ColorPickerType">
+        <service id="sedona_sbo.form.type.colorpicker" class="Sedona\SBORuntimeBundle\Form\Type\ColorPickerType">
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="router" />
             <tag name="form.type" alias="colorpicker" />
+        </service>
+
+        <service id="sedona_sbo.form.type.localedatetime" class="Sedona\SBORuntimeBundle\Form\Type\LocaleDateTimeType">
+            <argument type="service" id="translator"/>
+            <tag name="form.type" />
+        </service>
+
+        <service id="sedona_sbo.form.type.localedate" class="Sedona\SBORuntimeBundle\Form\Type\LocaleDateType">
+            <argument type="service" id="translator"/>
+            <tag name="form.type" />
+        </service>
+
+        <service id="sedona_sbo.form.type.localetime" class="Sedona\SBORuntimeBundle\Form\Type\LocaleTimeType">
+            <argument type="service" id="translator"/>
+            <tag name="form.type" />
         </service>
 
         <service id="sg_datatables.query" class="Sedona\SBORuntimeBundle\Datatable\Data\DatatableDataManager">
@@ -43,5 +58,7 @@
         <service id="twig.extension.intl" class="Twig_Extensions_Extension_Intl">
             <tag name="twig.extension" />
         </service>
+
+
     </services>
 </container>

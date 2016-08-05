@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type as Type;
+use Sedona\SBORuntimeBundle\Form\Type as SBOType;
 {% endblock use_statements %}
 
 {% block class_definition %}
@@ -25,11 +26,11 @@ class {{ form_class }} extends AbstractType
         $builder
 {% for field, metadata in fields %}
 {% if metadata.type == 'date' %}
-            ->add('{{ field }}', Type\DateType::class, array('widget' => 'single_text', 'format' => 'MM/dd/yyyy'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
+            ->add('{{ field }}', SBOType\LocaleDateType::class, array('widget' => 'single_text', 'format' => 'MM/dd/yyyy'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
 {% elseif metadata.type == 'datetime' %}
-            ->add('{{ field }}', Type\DateTimeType::class, array('widget' => 'single_text', 'format' => 'MM/dd/yyyy HH:mm:ss'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
+            ->add('{{ field }}', SBOType\LocaleDateTimeType::class, array('widget' => 'single_text', 'format' => 'MM/dd/yyyy HH:mm:ss'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
 {% elseif metadata.type == 'time' %}
-            ->add('{{ field }}', Type\TimeType::class, array('widget' => 'single_text', 'with_seconds' => true{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
+            ->add('{{ field }}', SBOType\LocaleTimeType::class, array('widget' => 'single_text'{% if metadata.nullable is defined %}, 'required' => {{ metadata.nullable ? 'false' : 'true' }}{% endif %}))
 {% elseif metadata.type in [constant('Doctrine\\ORM\\Mapping\\ClassMetadataInfo::MANY_TO_ONE')] %}
 {% set property = null  -%}
 {% if method_exists(metadata['targetEntity'] ,'get'~'name'|capitalize ) -%}

@@ -1,0 +1,27 @@
+{% extends '@AvanzuAdminTheme/layout/form-theme.html.twig' %}
+
+{% block datetime_widget %}
+    {% if widget == 'single_text' %}
+        <div class="input-group">
+            <div class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </div>
+
+            {% if attr.class is defined %}
+                {% set class = attr.class ~ ' timepicker' %}
+            {% else %}
+                {% set class = ' timepicker' %}
+            {% endif %}
+            {% set attr = attr|merge({'class' : class, 'data-datetimepicker':'on'}) %}
+
+            {{ block('form_widget_simple') }}
+        </div>
+    {% else %}
+        <div {{ block('widget_container_attributes') }}>
+            {{- form_errors(form.date) -}}
+            {{- form_errors(form.time) -}}
+            {{- form_widget(form.date) -}}
+            {{- form_widget(form.time) -}}
+        </div>
+    {% endif %}
+{% endblock %}

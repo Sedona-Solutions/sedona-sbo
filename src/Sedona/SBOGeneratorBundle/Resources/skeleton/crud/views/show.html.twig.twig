@@ -36,10 +36,10 @@
                                         {%- set time_format='none' %}
                                     {%- elseif metadata.type == 'datetime' %}
                                         {%- set date_format='long' %}
-                                        {%- set time_format='medium' %}
+                                        {%- set time_format='short' %}
                                     {%- else %}
                                         {%- set date_format='none' %}
-                                        {%- set time_format='medium' %}
+                                        {%- set time_format='short' %}
                                     {%- endif %}
 
                                 <td>{{ '{{ entity.' ~ field|replace({'_': ''}) ~ '|localizeddate("' ~ date_format ~ '","' ~ time_format ~ '") }}' }}</td>

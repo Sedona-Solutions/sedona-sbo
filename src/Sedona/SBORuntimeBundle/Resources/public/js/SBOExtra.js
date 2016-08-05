@@ -3,7 +3,7 @@
     "use strict";
     $('[data-timepicker]').datetimepicker({
         locale: myApplication.locale,
-        format: 'LT'
+        format: 'HH:mm'
     });
 
     $('[data-datepicker]').datetimepicker({
@@ -12,7 +12,8 @@
     });
 
     $('[data-datetimepicker]').datetimepicker({
-        locale: myApplication.locale
+        locale: myApplication.locale,
+        format: 'L HH:mm'
     });
 
     $(document)
