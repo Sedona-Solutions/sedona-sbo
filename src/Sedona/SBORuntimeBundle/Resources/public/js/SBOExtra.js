@@ -559,6 +559,7 @@
                         $(location).attr('href', html.redirect);
                     } else {
                         $content.html(html);
+                        $content.find('[data-toggle="select2-remote"]').select2remote();
                         $(document).trigger('sonata-admin-append-form-element');
                     }
                 },
