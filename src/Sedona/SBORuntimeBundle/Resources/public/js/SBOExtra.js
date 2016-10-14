@@ -261,6 +261,11 @@
                     return $row;
                 }
                 ;
+
+            if ($this.data('select2')) {
+                return;
+            }
+            
             for (var $prop in {'minimumInputLength':0,'maximumInputLength':0,'maximumSelectionSize':0}) {
                 if ($this.data($prop.toLocaleLowerCase()) != undefined) {
                     param[$prop] = $this.data($prop.toLocaleLowerCase());
@@ -384,7 +389,7 @@
                 .select2remote()
                 .select2("open");
         })
-        .on('ready loaded.bs.modal',function(){
+        .on('ready loaded.bs.modal sonata-admin-append-form-element',function(){
             $('[data-toggle="select2-remote"]').select2remote();
         })
     ;
