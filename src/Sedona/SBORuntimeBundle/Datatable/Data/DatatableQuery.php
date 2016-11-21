@@ -262,6 +262,16 @@ class DatatableQuery extends DatatableQueryBase
                             $this->addSearchOrderColumn($key, 'translations', $data);
 
                             continue;
+                        } else {
+                            if (false === array_key_exists($data, $this->selectColumns)) {
+                                $this->setIdentifierFromAssociation($data);
+                            }
+
+                            $this->selectColumns[$data][] = 'id';
+                            $this->joins[$this->tableName.'.'.$data] = $data;
+                            $this->addSearchOrderColumn($key, $data, 'id');
+
+                            continue;
                         }
                     }
 
