@@ -45,11 +45,10 @@ class AppKernel extends Kernel
              new JMS\DiExtraBundle\JMSDiExtraBundle($this),
              new JMS\AopBundle\JMSAopBundle(),
 
+             new Sedona\SBORuntimeBundle\SedonaSBORuntimeBundle(),
              new Sg\DatatablesBundle\SgDatatablesBundle(),
              new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),
              new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
-
-             new Sedona\SBORuntimeBundle\SedonaSBORuntimeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
